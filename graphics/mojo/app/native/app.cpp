@@ -1,0 +1,29 @@
+
+#include "app.h"
+
+#include "../../../../../stdlib/system/async/native/async.h"
+
+//#include "../../../../../stdlib/plugins/sdl2/SDL/include/SDL.h"
+#include "SDL.h"
+
+namespace bbApp{
+
+	void postEventFilter( bbAsync::Event *event ){
+
+		SDL_UserEvent uevent;
+		uevent.type=SDL_USEREVENT;
+		uevent.code=0;
+		uevent.data1=event;
+		uevent.data2=0;
+	
+		if( SDL_PeepEvents( (SDL_Event*)&uevent,1,SDL_ADDEVENT,SDL_FIRSTEVENT,SDL_LASTEVENT )!=1 ){
+			//TODO: Cleanup shutdown!
+			//printf( "SDL_PeepEvents error: %s\n",SDL_GetError() );fflush( stdout );
+		}
+	}
+
+	void init(){
+
+		bbAsync::setPostEventFilter( postEventFilter );
+	}
+}

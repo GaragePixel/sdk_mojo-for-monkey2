@@ -1,0 +1,54 @@
+
+	sdk_mojo - Development log:
+
+		PLANNEDs:
+
+			- Please wait for the new agnostic graphic module (will be interfaced with Mojo)
+
+		TODOs:
+		
+			- Plugins updates
+			
+		VERSION 1.0:
+
+			RELEASE:
+		
+				2025-02-03 - Publish sdk_mojo on github
+				2025-02-03 - Make a header/manpage for sdk_mojo
+				2025-02-03 - Make a documentation for sdk_mojo
+				2025-02-01 - Make a licence file for sdk_mojo
+	
+			QUALITY CONTROL:
+	
+				2025-02-28 - Test the full bana/examples folder				
+				2025-02-28 - Test stdlib with sdk_mojo				
+				2025-02-28 - Each box2dext tests works
+				
+				2025-02-27 - Test sdk with sdk_mojo
+				
+				2025-02-26 - Each 3d demos of sdklib_mojo.m3 works
+	
+			DOCUMENTATION:
+	
+				2025-02-xx - Draw the references map (sdk_mojo)
+				2025-02-xx - Make a schema of the sdk_mojo library
+	
+			INTEGRATION:
+	
+
+				2025-02-26 - box2dext - b2djson image loader from Benjamin Kalytta updated to 1.2.5
+				2025-02-26 - Sandbox test (legacy libs severed from modules, new libs recompiled)
+				2025-02-26 - Each tests folders for stdlib, sdk and sdk_mojo are now stand alones
+				2025-02-26 - Change the dependencies and name of sdklib_mojo for sdk_mojo
+				2025-02-26 - #Reflect tested
+		
+				2025-02-25 - Change the dependency paths in sdklib_mojo
+	
+			ANALYSIS & PLANNIFICATION:
+			
+				2025-02-24 - Draw the file hierarchy (sdklib_mojo)
+				2025-02-24 - Draw the spacename hierarchy (sdklib_mojo)
+				
+				2025-02-22 - Write the 'makefile' of sdklib_mojo
+				2025-02-22 - Make a new and modern file structure in sdklib_mojo
+				2025-02-22 - Create the module addons called 'sdklib_mojo'

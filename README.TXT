@@ -1,0 +1,22 @@
+***** Welcome to sdk_mojo! *****
+
+sdk_mojo version 1.0.0
+Mark Sibly, Monkey coders and iDkP from GaragePixel
+Please read the licence contained in the LICENCE file of this distribution.
+
+***** This library is written for a specific language *****
+
+Mx2 is a language and a transpiler from the Blitz family languages 
+released by Mark Sibly in 2018 as a CPSM 
+(https://en.wikipedia.org/wiki/Cross-platform_support_middleware).
+It's general-purpose, open-source, user-friendly and cross-platform:
+https://github.com/blitz-research/monkey2
+
+***** This is a temporaly readme *****
+
+You can install the library sdk_mojo in the modules folder of Monkey2, 
+it will works with stdlib: https://github.com/GaragePixel/stdlib-for-mx2
+and sdk : https://github.com/GaragePixel/sdk
+
+The actual diagrams are wip but you can already take an eye, 
+the informations are corrects.

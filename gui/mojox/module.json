@@ -1,0 +1,8 @@
+{
+	"module":"mojox",
+	"about":"GUI extensions for mojo",
+	"author":"Mark Sibly",
+	"version":"1.0.0",
+	"support":"http://monkeycoder.co.nz",
+	"depends":["std","mojo","hoedown","litehtml"]
+}

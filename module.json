@@ -1,0 +1,8 @@
+{
+	"module":"sdk_mojo",
+	"about":"Monkey2's Graphic Software Developement Kit",
+	"author":"Mark Sibly, Monkey coders, iDkP from GaragePixel",
+	"version":"1.0.0",
+	"support":"http://monkeycoder.co.nz",
+	"depends":["monkey, stdlib, sdk"]
+}

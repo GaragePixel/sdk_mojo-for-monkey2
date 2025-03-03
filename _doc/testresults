@@ -1,0 +1,89 @@
+
+	sdk_mojo - tests results:
+
+		m2:
+
+			Resizewindow							✓ PASSED
+			
+		m3:
+		
+			Alphacubes								✓ PASSED
+			Ducks									✓ PASSED
+			Effects									✓ PASSED
+			Hingechain								✓ PASSED
+			Jointchain								✓ PASSED
+			Particles								✓ PASSED
+			Pbrspheres								✓ PASSED
+			Room									✓ PASSED
+			Shapes									✓ PASSED
+			Spotlight								✓ PASSED
+			Sprites									✓ PASSED
+			Terrain									✓ PASSED
+			Test-scene								✓ PASSED
+			Water									✓ PASSED
+			toy-plane								✓ PASSED
+	
+		api:
+		
+			box2dext
+
+				sdk_mojo.api.box2dext - sdk_mojo_tests\physics\b2manager(image-able)
+		
+					e1-load							✓ PASSED
+					e2-save							✓ PASSED
+					e3-get_fixtures					✓ PASSED
+					e4-carjointcontrol				✓ PASSED
+					e5-tankjointcontrol				✓ PASSED
+					e6-custom_properties			✓ PASSED
+					e7-custom_propertiesbis			✓ PASSED
+					e8-custom_propertiester			✓ PASSED
+					e9-custom_propertiesQuad		✓ PASSED
+					eA-custom_propertiesQuint		✓ PASSED
+					eB-custom_properties			✓ PASSED
+					eC-collision					✓ PASSED
+					eD-addjson						✓ PASSED
+					eF-addjson2						✓ PASSED
+			
+				sdk_mojo.api.box2dext - b2djson(no-images)
+				
+					e0-load-existing				✓ PASSED
+					e1-load-no_images-no_names		✓ PASSED
+					e2-save_-no_images-no_names		✓ PASSED
+					e3-raycast_by_fixture			✓ PASSED
+					e4-raynbowcastcade_by_fixture	✓ PASSED
+					e5-raycast_by_callback			✓ PASSED
+					e6-AABB_callback				✓ PASSED
+					e7-AABB_callback2				✓ PASSED
+					e8-collision_callback			✓ PASSED
+					e9-sensor_callback				✓ PASSED
+
+		medias:
+		
+			SimpleVideoPlayer
+		
+				SimpleVideoPlayerExample			✓ PASSED
+
+		From the test folder:
+
+			assetstest -> moved in sdk_mojo_test/m2/						✓ PASSED
+			audiotest -> moved in sdk_mojo_test/m2/							✓ PASSED
+			displaymodes -> moved in sdk_mojo_test/m2/						✓ PASSED
+			bitmapfont -> moved in sdk_mojo_test/m2/						✓ PASSED
+			bunnymark -> moved in sdk_mojo_test/m2/							✓ PASSED
+			fonttest -> moved in sdk_mojo_test/m2/							✓ PASSED
+			gamecontroller -> moved in sdk_mojo_test/m2/					✓ PASSED
+			joystick -> moved in sdk_mojo_test/m2/							✓ PASSED
+			linetest -> moved in sdk_mojo_test/m2/							✓ PASSED
+			lightsparks -> moved in sdk_mojo_tests/m2/						✓ PASSED
+			particle -> moved in sdk_mojo_tests/m2/							✓ PASSED
+			spacechimps -> moved in sdk_mojo_tests/m2/						✓ PASSED
+			rendertoimage -> moved in sdk_mojo_tests/m2/					✓ PASSED
+			mojotest -> moved in sdk_mojo_tests/m2/							✓ PASSED
+			musictest -> moved in sdk_mojo_test/m2/							✓ PASSED
+			touchtest -> moved in sdk_mojo_test/m2/							✓ PASSED
+			vgrid -> moved in sdk_mojo_test/m2/								✓ PASSED
+			viewlayout -> moved in sdk_mojo_test/m2/						✓ PASSED
+			vpaint -> moved in sdk_mojo_tests/m2/							✓ PASSED
+			windowtest -> moved in sdk_mojo_tests/m2/						✓ PASSED
+
+			simplelight -> moved in sdk_mojo_tests/mx/						✓ PASSED
