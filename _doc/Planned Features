@@ -84,7 +84,7 @@
 	- Ideas:
 		- Retro vertex shader:
 			- To deal with the integer space
-		- Drawline in 3d via zfall test
+		- Drawline in 3d via zfail test
 		- Shadows:
 			- We need parametrable smooth shadows
 			- Per-projected-poly hard shadows (Carmack's inverse thing)
