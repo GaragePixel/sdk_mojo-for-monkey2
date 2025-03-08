@@ -1,0 +1,94 @@
+	
+	- Improvement of the legacy sdl2 3d engine
+	(Mojo3d is a real-time PBR renderer using sdl2 included in Monkey2.sdk_mojo)
+	
+		- Renamed effects:
+			- Grayscale (old called monochromeeffect)
+			- The Crepuscular rays will be named TwilightRays (rays effect)
+		- Scene: 
+			- data via glTF:
+				- GridMaps (3D tilemaps)
+			- Scene encoding:
+				- CityGML-3.0CM
+			- Space partitionning:
+				- Maybe octree-based
+		- Offline renderer:
+			- LuxCoreRender?
+		- Real time editing tools:
+			- Dynamic Paint (Brush system a-la Blitz3d)
+		- Real time renderer:
+			- Important features:
+				- Projection mode:
+					- Ortho camera?
+				- Sound:
+					- 3d sound engine
+				- Backface culling
+				- Screen-space global illumination (SSGI)
+				- Image-based lighting
+				- Reflections and indirect lighting via light probe volumes and cubemaps
+				- Open Shading Language (OSL) support?
+			- Other real time renderers:
+				- 3d wireframe renderer (maybe as a posteffect non-shader based)
+				- Hiden line renderer (maybe as a posteffect non-shader based)
+				- New retro renderer
+			- Primitive 3d renderable entities:
+				- Geomipmapping (done)
+				- Point cloud objects (will use a modified version of the billboard particule renderer)
+				- DLOD with morphing-based transition
+			- PostEffects:
+				- Art filters:
+					- Sepia
+					- Vignettage
+					- Film grain
+					- Color Grading
+					- Pixel vibrance
+					- Retro RTS Scanline
+					- Shading 
+						- Clay
+						- Ink
+						- Paint
+						- Sketch
+				- Optical filters:
+					- Glow (done)
+					- TwilightRays (done)
+					- Bokeh
+					- Lens flare
+					- Cross screen, streaks flare (Diffraction Spike)
+					- vertical smear
+				- Image filters:
+					- Gaussian blur (done, need to optimise? )
+					- Grayscale (done)
+					- Posterization 
+					- Outlines (Canny edge detector)
+				- Spatial filter:
+					- Ambient occlusion layer
+					- Depth of field (blur)
+				- Covolution kernel-based filter via pixel shader:
+					- Dithering
+					- Sobel operator (outlines)
+				- Transitions:
+					- Cross-fade transition
+					- Fade-on/off
+					- Arbitrary animated shape-based transitions
+				- Temporal filters:
+					- Dynamic Color correction/Contrast adjustement Node-based
+					- Eye adaptation 
+					- Motion blur
+					- Temporal frame generation (I call this like that)
+			- Physic simulation:
+				- Physically based Sky Texture
+				- Ocean Simulator
+				- mantaflow?
+				- OpenVDB support?
+				
+	- Ideas:
+		- Retro vertex shader:
+			- To deal with the integer space
+		- Drawline in 3d via zfall test
+		- Shadows:
+			- We need parametrable smooth shadows
+			- Per-projected-poly hard shadows (Carmack's inverse thing)
+			- Shape shadows (projected elliptic/custom textures)
+			- Dummy shadows (projected texture from an invisible custom mesh called 'dummy')
+			- For shape shadows and dummy shadows, possible to use a buffer, allowing 
+			a bayer-pass for retro-style transparency shadows

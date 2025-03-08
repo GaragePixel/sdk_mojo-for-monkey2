@@ -1,0 +1,98 @@
+
+	- Proposed roadmap for the legacy sdl2 3d engine:
+
+		- Phase 1
+			- Real time renderer:
+				- PostEffects:
+					- Art filters:
+						- Sepia
+						- Vignettage
+					- Optical filters:
+						- Glow (done)
+						- TwilightRays (done)
+						- Bokeh
+					- Image filters:
+						- Gaussian blur (done, need to optimise? )
+						- Grayscale (done)
+						- Posterization 
+						- Outlines (Canny edge detector)
+	
+		- Phase 2
+			- Other real time renderers:
+				- 3d wireframe renderer (maybe as a posteffect non-shader based)
+				- Hiden line renderer (maybe as a posteffect non-shader based)
+				- New retro renderer
+			- Realtime renderer:
+				- Important features:
+					- Backface culling
+					- Projection mode:
+						- Ortho camera?
+				- Sound:
+					- 3d sound engine via sdl2-mixer
+				- Primitive 3d renderable entities:
+					- Geomipmapping (done)
+					- Point cloud objects (will use a modified version of the billboard particule renderer)
+					- DLOD with morphing-based transition
+				- PostEffects:
+					- Art filters:
+						- Film grain
+						- Color Grading
+						- Pixel vibrance
+					- Optical filters:
+						- Lens flare
+						- Cross screen, streaks flare (Diffraction Spike)
+						- vertical smear
+					- Spatial filter:
+						- Ambient occlusion layer
+	
+		- Phase 3
+			- Real time renderer:
+				- Important features:
+					- Screen-space global illumination (SSGI)
+				- PostEffects:
+					- Art filters:
+						- Shading 
+							- Clay
+							- Ink
+							- Paint
+							- Sketch
+					- Spatial filter:
+						- Depth of field (blur)
+					- Covolution kernel-based filter via pixel shader:
+						- Dithering
+						- Sobel operator (outlines)
+					- Transitions:
+						- Cross-fade transition
+						- Fade-on/off
+						- Arbitrary animated shape-based transitions
+	
+		- Phase 4
+			- Space partitionning:
+				- Maybe octree-based
+			- Offline renderer:
+				- LuxCoreRender?
+			- Real time editing tools:
+				- Dynamic Paint (Brush system a-la Blitz3d)
+			- Real time renderer:
+				- Important features:
+					- Open Shading Language (OSL) support?
+					- Image-based lighting
+					- Reflections and indirect lighting via light probe volumes and cubemaps
+				- Physic simulation:
+					- Physically based Sky Texture
+					- mantaflow?
+					- Ocean Simulator
+					- OpenVDB support?
+				- PostEffects:
+					- Art filters:
+						- Retro RTS Scanline
+					- Temporal filters:
+						- Dynamic Color correction/Contrast adjustement Node-based
+						- Eye adaptation 
+						- Motion blur
+						- Temporal frame generation (I call this like that)
+			- Scene: 
+				- data via glTF:
+					- GridMaps (3D tilemaps)
+				- Scene encoding:
+					- CityGML-3.0CM
