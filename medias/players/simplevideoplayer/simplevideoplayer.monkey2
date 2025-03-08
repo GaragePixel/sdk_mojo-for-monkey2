@@ -1,5 +1,7 @@
 Namespace sdk_mojo.medias.simplevideo
 
+'iDkP: The SimpleVideoApi was wrote by @PixelPaladin
+
 Using stdlib.system.memory
 Using stdlib.system.time
 Using stdlib.graphics..
