@@ -4,7 +4,7 @@
 	
 		- Renamed effects:
 			- Grayscale (old called monochromeeffect)
-			- The Crepuscular rays will be named TwilightRays (rays effect)
+			- The Crepuscular rays will be named RaysEffects
 		- Scene: 
 			- data via glTF:
 				- GridMaps (3D tilemaps)
