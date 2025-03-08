@@ -9,7 +9,7 @@
 						- Vignettage
 					- Optical filters:
 						- Glow (done)
-						- TwilightRays (done)
+						- RaysEffects (done)
 						- Bokeh
 					- Image filters:
 						- Gaussian blur (done, need to optimise? )
