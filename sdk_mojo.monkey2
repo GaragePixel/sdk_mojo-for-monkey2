@@ -66,7 +66,7 @@ Namespace sdk_mojo
 #Import "physics/mx2_box2d/b2joints"								'Physics Framework
 																	'depends:
 																	'	box2d (sdk)
-Using sdk_mojo.m2
+Using sdk_mojo.m2..
 
 Using sdk_mojo.m3
 																	
