@@ -12,6 +12,10 @@ Private
 '	if any.
 'Using stdlib.collections.. 'Deactived so then fixture done.
 
+#If __DEBUG__ 'iDkP: Ugly!
+	Using stdlib.collections..
+#End 
+
 Global bindings:=New IntStack
 
 Public
