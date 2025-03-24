@@ -3,7 +3,14 @@ Namespace sdk_mojo.m2.graphics.glutil
 
 Private
 
-Using stdlib.collections..
+'iDkP for GaragePixel: FIXED!
+'	Possible you got an error if you try to import only
+'	sdk_mojo without stdlib, theorically. But in practice,
+'	we import always the both libraries because we need
+'	at least the collections and types from stdlib so
+'	I think isn't really a problem. Please signal an error
+'	if any.
+'Using stdlib.collections.. 'Deactived so then fixture done.
 
 Global bindings:=New IntStack
 
