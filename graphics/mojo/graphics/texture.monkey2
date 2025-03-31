@@ -35,6 +35,7 @@ Function glInternalFormat:GLenum( format:PixelFormat )
 	Case PixelFormat.RGB32F Return BBGL_ES ? GL_RGB Else GL_RGB32F
 	Case PixelFormat.RGBA32F Return BBGL_ES ? GL_RGBA Else GL_RGBA32F
 	Case PixelFormat.Depth32 Return GL_DEPTH_COMPONENT
+	'Case PixelFormat.Depth32F Return GL_DEPTH_COMPONENT 'jl added
 	End
 	RuntimeError( "Invalid PixelFormat" )
 	Return GL_RGBA
@@ -51,6 +52,7 @@ Function glFormat:GLenum( format:PixelFormat )
 	Case PixelFormat.RGB32F Return GL_RGB
 	Case PixelFormat.RGBA32F Return GL_RGBA
 	Case PixelFormat.Depth32 Return GL_DEPTH_COMPONENT
+	'Case PixelFormat.Depth32F Return GL_DEPTH_COMPONENT 'gl added
 	End
 	RuntimeError( "Invalid PixelFormat" )
 	Return GL_RGBA
@@ -67,6 +69,7 @@ Function glType:GLenum( format:PixelFormat )
 	Case PixelFormat.RGB32F Return GL_FLOAT
 	Case PixelFormat.RGBA32F Return GL_FLOAT
 	Case PixelFormat.Depth32 Return GL_UNSIGNED_INT
+	'Case PixelFormat.Depth32F Return GL_UNSIGNED_INT 'jl added
 	End
 	RuntimeError( "Invalid PixelFormat" )
 	Return GL_UNSIGNED_BYTE
@@ -260,6 +263,7 @@ Class Texture Extends Resource
 			Init( pixmap.Width,pixmap.Height,pixmap.Format,flags,Null )
 			PastePixmap( pixmap,0,0 )
 		Endif
+		'_filePath = pixmap.FilePath 'jl added
 	End
 	
 	Property Size:Vec2i()
@@ -309,6 +313,15 @@ Class Texture Extends Resource
 		
 		Return _managed
 	End
+	
+	#rem monkeydoc Image filepath.
+	#end
+	Property FilePath:String()
+		'added by jl
+		Return _filePath
+	Setter( filePath:String )
+		_filePath = filePath
+	End	
 	
 	Method PastePixmap( pixmap:Pixmap,x:Int,y:Int )
 		
@@ -620,6 +633,8 @@ Class Texture Extends Resource
 	'Global _boundSeq:Int
 	'Global _bound:=New GLuint[8]
 
+
+	Field _filePath:String 'jl added
 	Field _size:Vec2i
 	Field _format:PixelFormat
 	Field _flags:TextureFlags
