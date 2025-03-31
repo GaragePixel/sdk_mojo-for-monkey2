@@ -263,7 +263,7 @@ Class Texture Extends Resource
 			Init( pixmap.Width,pixmap.Height,pixmap.Format,flags,Null )
 			PastePixmap( pixmap,0,0 )
 		Endif
-		'_filePath = pixmap.FilePath 'jl added
+		_filePath = pixmap.FilePath 'jl added
 	End
 	
 	Property Size:Vec2i()
