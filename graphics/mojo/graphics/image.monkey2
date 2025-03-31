@@ -508,6 +508,101 @@ Class Image Extends Resource
 		UpdateVertices()
 	End
 
+' Integrated Class Image Extension 'About Drawing an image on a pixmap 
+'
+' iDkP from GaragePixel
+' 2025-01-16
+'
+' Proposed and discuted in the Discord server by iDkP: 
+' https://discord.com/channels/796336780302876683/870267572812128298/1329307346895110205
+'
+' 	— « Thanks @doumdoum for giving a kick to this idea^^ 
+' 		I had more or less given up and used custom drawing routines on pixmaps. 
+' 		But the basic idea was to produce a pixmap by drawing with mojo functions 
+' 		to take advantage of the acceleration, while freeing the VRam from the texture, 
+' 		keeping it in RAM to use it in the context of a "retro programmed" engine 
+' 		or other ideas. »
+'
+' This method extends Mojo's Image with methods to create Pixmaps from image content,
+' allowing for efficient zero-copy pipeline integration between the rendering
+' system and the pixmap drawing API. This enables seamless transfer from
+' GPU-accelerated images to CPU-manipulable pixel data.
+	
+    Method FromImage:Pixmap(
+		rect:Recti=Null,
+		dstx:Int=0,
+		dsty:Int=0,
+		convertPixelFormat:Bool=False)
+
+		' This is the Instance method for converting self to Pixmap
+
+        'Get a new pixmap from an Image
+        
+        Local w:Int=Width
+        Local h:Int=Height
+        Local f:=PixelFormat.RGBA8
+        
+        Local p:=New Pixmap(w,h,f)
+        Local i:=New Image(w,h,f,TextureFlags.Dynamic)
+        Local c:=New Canvas(i)
+
+        c.DrawImage(Self,dstx,dsty)
+        c.Flush()
+
+        If rect=Null rect=New Recti(0,0,w,h)
+        c.CopyPixels(rect,p)
+        If convertPixelFormat p=p.Convert(Self.Texture.Format)
+        
+        i=Null
+        c=Null
+        GCCollect()        
+
+        Return p
+    End
+    
+    Function FromImage:Pixmap(  
+	    image:Image,
+		rect:Recti=Null,
+		dstx:Int=0,
+		dsty:Int=0,
+		convertPixelFormat:Bool=False)
+
+		' iDkP from GaragePixel
+		' 2025-01-16
+		'
+		' Static function for converting any Image to Pixmap
+		'
+		' Proposed and discuted in the Discord server by iDkP: 
+		' https://discord.com/channels/796336780302876683/870267572812128298/1329307346895110205
+		'
+		' This implementation handles the complex task of transferring pixel data
+		' from a GPU texture to CPU memory through an intermediate Canvas operation.
+		' The process creates a temporary Image and Canvas, renders the source
+		' ImageWrapper to it, then copies the pixel data into a new Pixmap.
+
+        'Get a new pixmap from an Image
+        
+        Local w:Int=image.Width
+        Local h:Int=image.Height
+        Local f:=PixelFormat.RGBA8
+        
+        Local p:=New Pixmap(w,h,f)
+        Local i:=New Image(w,h,f,TextureFlags.Dynamic)
+        Local c:=New Canvas(i)
+
+        c.DrawImage(image,dstx,dsty)
+        c.Flush()
+
+        If rect=Null rect=New Recti(0,0,w,h)
+        c.CopyPixels(rect,p)
+        If convertPixelFormat p=p.Convert(image.Texture.Format)
+        
+        i=Null
+        c=Null
+        GCCollect()        
+
+        Return p
+    End
 End
 
 Class ResourceManager Extension
