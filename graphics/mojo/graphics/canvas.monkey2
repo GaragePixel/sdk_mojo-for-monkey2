@@ -3,6 +3,8 @@ Namespace sdk_mojo.m2.graphics
 
 Using stdlib.math.matrices..
 
+Using stdlib.graphics..
+
 #rem monkeydoc Outline modes.
 
 Outline modes are used with the [[Canvas.OutlineMode]] property and control the style
@@ -20,6 +22,22 @@ Enum OutlineMode
 	Solid=1
 	Smooth=2
 End
+
+' Define the concrete type alias for Monkey2's Canvas
+' Added by iDkP
+Alias FrameBufferMojo:FrameBuffer<Canvas,Image,Texture>
+
+' Define the concrete type alias for Monkey2's Canvas
+' Added by iDkP
+Alias CanvasWrapperMojo:CanvasWrapper<Canvas,Image,Texture>
+
+' Define the concrete type alias for Monkey2's Mojo implementation
+' Added by iDkP
+'Alias ImageBufferMojo:ImageBuffer<Canvas,Image,Texture>
+
+' Define the concrete type alias for Monkey2's Mojo Canvas, Image and Texture
+' Added by iDkP
+'Alias FrameBufferMojo:FrameBuffer<Canvas,Image,Texture>
 
 #rem monkeydoc The Canvas class.
 
@@ -1140,6 +1158,16 @@ Class Canvas
 		Wend
 
 	End
+
+	Method DrawImage(
+		'Added by iDkP
+		image:ImageWrapperMojo,
+		x:Float,y:Float,
+		rotation:Float,
+		scaleX:Float,scaleY:Float)
+		
+		DrawImage(image.Image,x,y,rotation,scaleX,scaleY)
+	End 
 	
 	#rem monkeydoc Adds a light to the canvas.
 	
@@ -1943,7 +1971,5 @@ Class Canvas
 			_device.Render( 4,1,op.primOffset )
 		
 		Next
-		
 	End
-
 End
