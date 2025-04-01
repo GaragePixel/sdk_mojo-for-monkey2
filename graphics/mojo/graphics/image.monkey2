@@ -3,6 +3,16 @@ Namespace sdk_mojo.m2.graphics
 
 Using stdlib.system.resource
 
+Using stdlib.graphics..
+
+' Define the concrete type alias for Monkey2's Image
+' Added by iDkP
+Alias ImageBufferMojo:ImageBuffer<Canvas,Image,Texture>
+
+' Define the concrete type alias for Monkey2's Image
+' Added by iDkP
+Alias ImageWrapperMojo:ImageWrapper<Canvas,Image,Texture>
+
 #rem monkeydoc The Image class.
 
 An image is a rectangular array of pixels that can be drawn to a canvas using one of the [[Canvas.DrawImage]] methods.
@@ -280,7 +290,15 @@ Class Image Extends Resource
 
 	#rem monkeydoc @hidden Sets an image texture.
 	#end	
-	Method SetTexture( index:Int,texture:Texture )
+'	Method SetTexture( index:Int,texture:Texture )
+	
+'		_textures[index]=texture
+		
+'		If Not index _managed=texture?.ManagedPixmap
+		
+'		_uniforms.SetTexture( "ImageTexture"+index,texture )
+'	End
+	Method SetTexture(index:Int, texture:sdk_mojo.m2.graphics.Texture)
 	
 		_textures[index]=texture
 		
@@ -603,6 +621,7 @@ Class Image Extends Resource
 
         Return p
     End
+
 End
 
 Class ResourceManager Extension
