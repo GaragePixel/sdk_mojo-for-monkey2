@@ -5,6 +5,8 @@ Using sdk_mojo.m2.graphics.glutil
 
 Using stdlib.system.resource
 
+Using stdlib.graphics..
+
 Private
 
 'fake it for now!
@@ -168,6 +170,9 @@ End
 Public
 
 #rem monkeydoc Texture flags.
+Undoned (iDkP)
+Because the TextureFlags definition can be used across several new renderer, 
+it was moved in stdlib.
 
 | TextureFlags	| Description
 |:--------------|:-----------
@@ -180,20 +185,20 @@ Public
 | Dynamic		| The texture contents are regularly updated and don't need to be preserved.
 | Cubemap		| The texture is a cubmap.
 #end
-Enum TextureFlags
-	None=			$0000
-	WrapS=			$0001
-	WrapT=			$0002
-	Filter=			$0004
-	Mipmap=			$0008
+'Enum TextureFlags
+'	None=			$0000
+'	WrapS=			$0001
+'	WrapT=			$0002
+'	Filter=			$0004
+'	Mipmap=			$0008
 	
-	Dynamic=		$0100
-	Cubemap=		$0200
-	Envmap=			$0400
+'	Dynamic=		$0100
+'	Cubemap=		$0200
+'	Envmap=			$0400
 	
-	WrapST=			WrapS|WrapT
-	FilterMipmap=	Filter|Mipmap
-End
+'	WrapST=			WrapS|WrapT
+'	FilterMipmap=	Filter|Mipmap
+'End
 
 #rem monketdoc @hidden
 #end
@@ -205,6 +210,10 @@ Enum CubeFace
 	PositiveZ
 	NegativeZ
 End
+
+' Define the concrete type alias for Monkey2's Texture
+' Added by iDkP
+Alias TextureWrapperMojo:TextureWrapper<Texture>
 
 #rem monkeydoc The Texture class.
 
