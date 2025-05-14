@@ -5,6 +5,8 @@ Using stdlib.math.matrices..
 
 Using stdlib.graphics..
 
+Alias RectLibf:stdlib.math.types.Rect<Float> 'Added by iDkP
+
 #rem monkeydoc Outline modes.
 
 Outline modes are used with the [[Canvas.OutlineMode]] property and control the style
@@ -1168,7 +1170,111 @@ Class Canvas
 		
 		DrawImage(image.Image,x,y,rotation,scaleX,scaleY)
 	End 
+
+	Class TRect8
+		
+		'----------------------------------------------------
+		'---------------------------------------------------- Rect8 Draws
+		'----------------------------------------------------	
+		
+		#rem 
+			Mini-Library Rect8 (draw a rect8 struct)
+			#Author: iDkP from GaragePixel
+			Date: 2025-05-14
+			
+			Helpers to draw a Rect8 for debug purpose.
+			
+			Note: the TRect8 is a singleton created in the Canvas class
+			and addressable as a property. You call the property Rect8 to get 
+			access to the draw functions.
+			
+			canvas.Rect8.Draw( myrect8 )
+			
+			The draw function was originally inclued inside the Rect8, but when I've created stdlib
+			and reintegrated my old libraries' stuff, the data was separated from the graphical engine.
+		#end
+		
+		#rem monkeydoc Draws a rect8.
+		
+		Draws a rect8 in the current Color using the current BlendMode.
+		 
+		The vertex coordinates are also transform by the current Matrix. 	
+		#end	
+		Method Draw( rect8:Rect8f )
+			Self.DrawRect(rect8.MarginsRect)
+		End 
+		
+		#rem monkeydoc Draws a rect8.
+		
+		Draws a rect8 using the current BlendMode.
+		
+		The outter rect and the margins rect have their own colors.
+		
+		The vertex coordinates are also transform by the current Matrix. 	
+		#end
+		Method Draw(	rect8:Rect8f,
+						colorOutterRect:Color,colorMarginsRect:Color	)
+						
+			Local oldColor:=_.Color
+			_.Color=colorOutterRect
+			Self.DrawRect(rect8.Rect)
+			_.Color=colorMarginsRect
+			Self.DrawRect(rect8.MarginsRect)
+			_.Color=oldColor
+		End 	
+		
+		#rem monkeydoc Draws a rect8.
+		
+		Draws the rect8's outter rect using the current BlendMode.
+		
+		The outter rect have his own color as an optional parameter.
+		
+		The vertex coordinates are also transform by the current Matrix. 	
+		#end	
+		Method DrawRect(	rect8:Rect8f,
+							colorOutterRect:Color=_.Color	)
+							
+			Local oldColor:=_.Color
+			_.Color=colorOutterRect
+			Self.DrawRect(rect8.Rect)
+			_.Color=oldColor
+		End 
+		
+		#rem monkeydoc Draws a rect8.	
+		
+		Draws the rect8's margins rect using the current BlendMode.
+		
+		The margins rect have his own color as an optional parameter.
+		
+		The vertex coordinates are also transform by the current Matrix. 	
+		#end		
+		Method DrawMarginsRect(		rect8:Rect8f,
+									colorMarginsRect:Color=_.Color	)
+									
+			Local oldColor:=_.Color
+			_.Color=colorMarginsRect
+			Self.DrawRect(rect8.MarginsRect)
+			_.Color=oldColor
+		End 
+		
+		Protected 
 	
+		#rem monkeydoc @hidden
+		#end	
+		Method DrawRect( rect:RectLibf )
+			Local x0:=rect.min.x
+			Local y0:=rect.min.y
+			Local x1:=rect.max.x
+			Local y1:=rect.max.y
+			_.DrawLine(x0,y0,x1,y0)
+			_.DrawLine(x1,y0,x1,y1)
+			_.DrawLine(x1,y1,x0,y1)
+			_.DrawLine(x0,y1,x0,y0)
+		End 
+		
+		Field _:Canvas
+	End 
+
 	#rem monkeydoc Adds a light to the canvas.
 	
 	This method must only be called while the canvas is in lighting mode, ie: between calls to [[BeginLighting]] and [[EndLighting]].
