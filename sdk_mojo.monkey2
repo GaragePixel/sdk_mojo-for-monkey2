@@ -10,6 +10,8 @@ Namespace sdk_mojo
 
 #Import "<stdlib>"
 
+Using stdlib..
+
 'graphics
 
 #Import "graphics/mojo/mojo"										'Graphics Framework
