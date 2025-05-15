@@ -132,13 +132,9 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current viewport.
-	
 	The viewport describes the rect within the render target that rendering occurs in.
-	
 	All rendering is relative to the top-left of the viewport, and is clipped to the intersection of the viewport and scissor rects.
-	
 	This property must not be modified if the canvas is in lighting mode.
-		
 	#end
 	Property Viewport:Recti()
 	
@@ -156,13 +152,9 @@ Class Canvas
 	End
 
 	#rem monkeydoc The current scissor rect.
-	
 	The scissor rect is a rect within the viewport that can be used for additional clipping.
-	
 	Scissor rect coordinates are relative to the current viewport rect, but are not affected by the current drawing matrix.
-	
 	This property must not be modified if the canvas is in lighting mode.
-		
 	#end
 	Property Scissor:Recti()
 	
@@ -180,11 +172,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Ambient light color for lighting mode.
-	
 	Sets the ambient light color for lighting.
-	
 	This property cannot be modified if the canvas is already in lighting mode.
-		
 	#end
 	Property AmbientLight:Color()
 	
@@ -209,11 +198,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc TODO! Texture filtering enabled state.
-	
 	Set to true for normal behavior.
-	
 	Set to false for a groovy retro effect.
-	
 	#end	
 	Property TextureFilteringEnabled:Bool()
 		
@@ -266,9 +252,7 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current font for use with DrawText.
-	
 	Set font to null to use the default mojo font.
-	
 	#end	
 	Property Font:Font()
 	
@@ -282,11 +266,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current drawing alpha level.
-	
 	Note that [[Alpha]] and the alpha component of [[Color]] are multiplied together to produce the final alpha value for rendering. 
-	
 	This allows you to use [[Alpha]] as a 'master' alpha level.
-
 	#end	
 	Property Alpha:Float()
 	
@@ -301,11 +282,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current drawing color.
-	
 	Note that [[Alpha]] and the alpha component of [[Color]] are multiplied together to produce the final alpha value for rendering. 
-	
 	This allows you to use [[Alpha]] as a 'master' alpha level.
-
 	#end
 	Property Color:Color()
 	
@@ -320,9 +298,7 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current drawing matrix.
-	
 	All coordinates passed to draw methods are multiplied by this matrix for rendering.
-	
 	#end
 	Property Matrix:AffineMat3f()
 	
@@ -336,11 +312,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current outline mode.
-	
 	Outline modes control the style of outlines drawn.
-	
 	See the [[OutlineMode]] enum for a list of possible values.
-	
 	#end
 	Property OutlineMode:OutlineMode()
 		
@@ -352,7 +325,6 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current outline color.
-	
 	#end
 	Property OutlineColor:Color()
 		
@@ -368,7 +340,6 @@ Class Canvas
 	End
 	
 	#rem monkeydoc The current outline width.
-	
 	#end
 	Property OutlineWidth:Float()
 		
@@ -379,8 +350,13 @@ Class Canvas
 		_outlineWidth=width
 	End
 	
-	#rem monkeydoc Pushes the drawing matrix onto the internal matrix stack.
+	#rem monkeydoc Get access to the rect9 draw methods.
+	#end
+	Property Rect9:TRect9() 'Added by iDkP
+		Return _trect9
+	End
 	
+	#rem monkeydoc Pushes the drawing matrix onto the internal matrix stack.
 	#end
 	Method PushMatrix()
 	
@@ -388,7 +364,6 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Pops the drawing matrix off the internal matrix stack.
-	
 	#end
 	Method PopMatrix()
 	
@@ -404,15 +379,10 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Translates the drawing matrix.
-	
 	Translates the drawing matrix. This has the effect of translating all drawing coordinates by `tx` and `ty`.
-	
 	@param tx X translation.
-	
 	@param ty Y translation.
-	
 	@param tv X/Y translation.
-	
 	#end
 	Method Translate( tx:Float,ty:Float )
 	
@@ -425,11 +395,8 @@ Class Canvas
 	End
 
 	#rem monkeydoc Rotates the drawing matrix.
-	
 	Rotates the drawing matrix. This has the effect of rotating all drawing coordinates by the angle `rz'.
-	
 	@param rz Rotation angle in radians.
-	
 	#end
 	Method Rotate( rz:Float )
 	
@@ -437,15 +404,10 @@ Class Canvas
 	End
 
 	#rem monkeydoc Scales the drawing matrix.
-	
 	Scales the drawing matrix. This has the effect of scaling all drawing coordinates by `sx` and `sy`.
-	
 	@param sx X scale factor.
-	
 	@param sy Y scale factor.
-	
 	@param sv X/Y scale factor.
-	
 	#end
 	Method Scale( sx:Float,sy:Float )
 	
@@ -458,17 +420,11 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws a point.
-	
 	Draws a point in the current [[Color]] using the current [[BlendMode]].
-	
 	The point coordinates are transformed by the current [[Matrix]] and clipped to the current [[Viewport]] and [[Scissor]].
-	
 	@param x Point x coordinate.
-	
 	@param y Point y coordinate.
-	
 	@param v Point coordinates.
-	
 	#end
 	Method DrawPoint( x:Float,y:Float )
 	
@@ -561,23 +517,14 @@ Class Canvas
 	Public
 	
 	#rem monkeydoc Draws a line.
-
 	Draws a line in the current [[Color]] using the current [[BlendMode]].
-	
 	The line coordinates are transformed by the current [[Matrix]] and clipped to the current [[Viewport]] and [[Scissor]].
-	
 	@param x0 X coordinate of first endpoint of the line.
-	
 	@param y0 Y coordinate of first endpoint of the line.
-	
 	@param x1 X coordinate of first endpoint of the line.
-	
 	@param y1 Y coordinate of first endpoint of the line.
-	
 	@param v0 First endpoint of the line.
-	
 	@param v1 Second endpoint of the line.
-	
 	#end
 	Method DrawLine( x0:Float,y0:Float,x1:Float,y1:Float )
 
@@ -626,11 +573,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws a triangle.
-
 	Draws a triangle in the current [[Color]] using the current [[BlendMode]].
-	
 	The triangle vertex coordinates are also transform by the current [[Matrix]].
-
 	#End
 	Method DrawTriangle( x0:Float,y0:Float,x1:Float,y1:Float,x2:Float,y2:Float )
 		
@@ -653,11 +597,8 @@ Class Canvas
 	End
 
 	#rem monkeydoc Draws a quad.
-
 	Draws a quad in the current [[Color]] using the current [[BlendMode]].
-	
 	The quad vertex coordinates are also transform by the current [[Matrix]].
-
 	#end
 	Method DrawQuad( x0:Float,y0:Float,x1:Float,y1:Float,x2:Float,y2:Float,x3:Float,y3:Float )
 		
@@ -681,11 +622,8 @@ Class Canvas
 	End
 
 	#rem monkeydoc Draws a rectangle.
-
 	Draws a rectangle in the current [[Color]] using the current [[BlendMode]].
-	
 	The rectangle vertex coordinates are also transform by the current [[Matrix]].
-
 	#end
 	Method DrawRect( x:Float,y:Float,w:Float,h:Float )
 		
@@ -758,19 +696,12 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws an oval.
-
 	Draws an oval in the current [[Color]] using the current [[BlendMode]].
-	
 	The oval vertex coordinates are also transform by the current [[Matrix]].
-
 	@param x Top left x coordinate for the oval.
-
 	@param y Top left y coordinate for the oval.
-
 	@param width Width of the oval.
-
 	@param height Height of the oval.
-
 	#end
 	Method DrawOval( x:Float,y:Float,width:Float,height:Float )
 	
@@ -815,19 +746,12 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws an ellipse.
-
 	Draws an ellipse in the current [[Color]] using the current [[BlendMode]].
-	
 	The ellipse is also transformed by the current [[Matrix]].
-
 	@param x Center x coordinate for the ellipse.
-
 	@param y Center y coordinate for the ellipse.
-
 	@param xRadius X axis radius for the ellipse.
-
 	@param yRadius Y axis radius for the ellipse.
-
 	#end
 	Method DrawEllipse( x:Float,y:Float,xRadius:Float,yRadius:Float )
 		
@@ -835,15 +759,10 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws a circle.
-
 	Draws a circle in the current [[Color]] using the current [[BlendMode]] and transformed by the current [[Matrix]].
-
 	@param x Center x coordinate for the circle.
-
 	@param y Center y coordinate for the circle.
-
 	@param radius The circle radius.
-
 	#end
 	Method DrawCircle( x:Float,y:Float,radius:Float )
 		
@@ -851,13 +770,9 @@ Class Canvas
 	End
 
 	#rem monkeydoc Draws a polygon.
-
 	Draws a polygon using the current [[Color]], [[BlendMode]] and [[Matrix]].
-	
 	The `vertices` array must be at least 2 elements long
-
 	@param vertices Array of x/y vertex coordinate pairs.
-
 	#end
 	Method DrawPoly( vertices:Float[] )
 		
@@ -884,15 +799,10 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws a sequence of polygons.
-
 	Draws a sequence of polygons using the current [[Color]], [[BlendMode]] and [[Matrix]].
-
 	@param order The type of polygon: 3=triangles, 4=quads, >4=n-gons.
-
 	@param count The number of polygons.
-	
 	@param vertices Array of x/y vertex coordinate pairs.
-	
 	#end
 	Method DrawPolys( order:Int,count:Int,vertices:Float[] )
 		
@@ -922,29 +832,17 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws a sequence of primtives.
-
 	Draws a sequence of convex primtives using the current [[Color]], [[BlendMode]] and [[Matrix]].
-	
 	@param order The type of primitive: 1=points, 2=lines, 3=triangles, 4=quads, >4=n-gons.
-	
 	@param count The number of primitives to draw.
-	
 	@param vertices Pointer to the first vertex x,y pair.
-	
 	@param verticesPitch Number of bytes from one vertex x,y pair to the next. Set to 8 for 'tightly packed' vertices.
-	
 	@param texCoords Pointer to the first texCoord s,t pair. This can be null.
-	
 	@param texCoordsPitch Number of bytes from one texCoord s,y to the next. Set to 8 for 'tightly packed' texCoords.
-	
 	@param colors Pointer to the first RGBA uint color value. This can be null.
-	
 	@param colorsPitch Number of bytes from one RGBA color to the next. Set to 4 for 'tightly packed' colors.
-	
 	@param image Source image for rendering. This can be null.
-	
 	@param indices Pointer to sequence of integer indices for indexed drawing. This can by null for non-indexed drawing.
-	
 	#end
 	Method DrawPrimitives( order:Int,count:Int,vertices:Float Ptr,verticesPitch:Int,texCoords:Float Ptr,texCoordsPitch:Int,colors:UInt Ptr,colorsPitch:Int,image:Image,indices:Int Ptr )
 		DebugAssert( order>0 And count>0,"Illegal primitive" )
@@ -966,14 +864,14 @@ Class Canvas
 					Local cp:=Cast<UInt Ptr>( Cast<UByte Ptr>( colors )+j*colorsPitch )
 					AddVertex( vp[0],vp[1],tp[0],tp[1],cp[0] )
 				Next
-			Else If texCoords
+			ElseIf texCoords
 				For Local i:=0 Until n
 					Local j:=indices[i]
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+j*verticesPitch )
 					Local tp:=Cast<Float Ptr>( Cast<UByte Ptr>( texCoords )+j*texCoordsPitch )
 					AddVertex( vp[0],vp[1],tp[0],tp[1] )
 				Next
-			Else If colors
+			ElseIf colors
 				For Local i:=0 Until n
 					Local j:=indices[i]
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+j*verticesPitch )
@@ -986,7 +884,7 @@ Class Canvas
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+j*verticesPitch )
 					AddVertex( vp[0],vp[1],0,0 )
 				Next
-			Endif
+			End
 		Else
 			If texCoords And colors
 				For Local i:=0 Until n
@@ -995,13 +893,13 @@ Class Canvas
 					Local cp:=Cast<UInt Ptr>( Cast<UByte Ptr>( colors )+i*colorsPitch )
 					AddVertex( vp[0],vp[1],tp[0],tp[1],cp[0] )
 				Next
-			Else If texCoords
+			ElseIf texCoords
 				For Local i:=0 Until n
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+i*verticesPitch )
 					Local tp:=Cast<Float Ptr>( Cast<UByte Ptr>( texCoords )+i*texCoordsPitch )
 					AddVertex( vp[0],vp[1],tp[0],tp[1] )
 				Next
-			Else If colors
+			ElseIf colors
 				For Local i:=0 Until n
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+i*verticesPitch )
 					Local cp:=Cast<UInt Ptr>( Cast<UByte Ptr>( colors )+i*colorsPitch )
@@ -1012,28 +910,19 @@ Class Canvas
 					Local vp:=Cast<Float Ptr>( Cast<UByte Ptr>( vertices )+i*verticesPitch )
 					AddVertex( vp[0],vp[1],0,0 )
 				Next
-			Endif
-		Endif
+			End
+		End
 	End
 	
 	#rem monkeydoc Draws an image.
-
 	Draws an image using the current [[Color]], [[BlendMode]] and [[Matrix]].
-
 	@param tx X coordinate to draw image at.
-
 	@param ty Y coordinate to draw image at.
-
 	@param tv X/Y coordinates to draw image at.
-
 	@param rz Rotation angle, in radians, for drawing.
-
 	@param sx X axis scale factor for drawing.
-
 	@param sy Y axis scale factor for drawing.
-
-	@param sv X/Y scale factor for drawing.
- 
+	@param sv X/Y scale factor for drawing. 
 	#end	
 	Method DrawImage( image:Image,tx:Float,ty:Float )
 	
@@ -1079,19 +968,12 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Draws text.
-
 	Draws text using the current [[Color]], [[BlendMode]] and [[Matrix]].
-
 	@param text The text to draw.
-
 	@param tx X coordinate to draw text at.
-
 	@param ty Y coordinate to draw text at.
-
 	@param handleX X handle for drawing.
-
 	@param handleY Y handle for drawing.
-
 	#end
 	Method DrawText( text:String,tx:Float,ty:Float,handleX:Float=0,handleY:Float=0 )
 	
@@ -1171,89 +1053,78 @@ Class Canvas
 		DrawImage(image.Image,x,y,rotation,scaleX,scaleY)
 	End 
 
-	Class TRect8
-		
+	Class TRect9
+
 		'----------------------------------------------------
-		'---------------------------------------------------- Rect8 Draws
+		'---------------------------------------------------- Rect9 Draws
 		'----------------------------------------------------	
 		
 		#rem 
-			Mini-Library Rect8 (draw a rect8 struct)
-			#Author: iDkP from GaragePixel
-			Date: 2025-05-14
+			Mini-Library Rect9 (draw a rect9 struct)
+			@Author: iDkP from GaragePixel
+			@Date: 2025-05-14
 			
-			Helpers to draw a Rect8 for debug purpose.
+			Helpers to draw a Rect9 for debug purpose.
 			
-			Note: the TRect8 is a singleton created in the Canvas class
-			and addressable as a property. You call the property Rect8 to get 
+			Note: the TRect9 is a singleton created in the Canvas class
+			and addressable as a property. You call the property Rect9 to get 
 			access to the draw functions.
 			
-			canvas.Rect8.Draw( myrect8 )
+			canvas.Rect9.Draw( myrect9 )
 			
-			The draw function was originally inclued inside the Rect8, but when I've created stdlib
+			The draw function was originally inclued inside the Rect9, but when I've created stdlib
 			and reintegrated my old libraries' stuff, the data was separated from the graphical engine.
 		#end
 		
-		#rem monkeydoc Draws a rect8.
-		
-		Draws a rect8 in the current Color using the current BlendMode.
-		 
+		#rem monkeydoc Draws a rect9.
+		Draws a rect9 in the current Color using the current BlendMode. 
 		The vertex coordinates are also transform by the current Matrix. 	
 		#end	
-		Method Draw( rect8:Rect8f )
-			Self.DrawRect(rect8.MarginsRect)
+		Method Draw( rect9:Rect9f )
+			Self.DrawRect(rect9.MarginsRect)
 		End 
 		
-		#rem monkeydoc Draws a rect8.
-		
-		Draws a rect8 using the current BlendMode.
-		
+		#rem monkeydoc Draws a rect9
+		Draws a rect9 using the current BlendMode.
 		The outter rect and the margins rect have their own colors.
-		
 		The vertex coordinates are also transform by the current Matrix. 	
 		#end
-		Method Draw(	rect8:Rect8f,
+		Method Draw(	rect9:Rect9f,
 						colorOutterRect:Color,colorMarginsRect:Color	)
 						
 			Local oldColor:=_.Color
 			_.Color=colorOutterRect
-			Self.DrawRect(rect8.Rect)
+			Self.DrawRect(rect9.Rect)
 			_.Color=colorMarginsRect
-			Self.DrawRect(rect8.MarginsRect)
+			Self.DrawRect(rect9.MarginsRect)
 			_.Color=oldColor
 		End 	
 		
-		#rem monkeydoc Draws a rect8.
-		
-		Draws the rect8's outter rect using the current BlendMode.
-		
+		#rem monkeydoc Draws a rect9.
+		Draws the rect9s outter rect using the current BlendMode.
 		The outter rect have his own color as an optional parameter.
-		
 		The vertex coordinates are also transform by the current Matrix. 	
 		#end	
-		Method DrawRect(	rect8:Rect8f,
+		Method DrawRect(	rect9:Rect9f,
 							colorOutterRect:Color=_.Color	)
 							
 			Local oldColor:=_.Color
 			_.Color=colorOutterRect
-			Self.DrawRect(rect8.Rect)
+			Self.DrawRect(rect9.Rect)
 			_.Color=oldColor
 		End 
 		
-		#rem monkeydoc Draws a rect8.	
-		
-		Draws the rect8's margins rect using the current BlendMode.
-		
+		#rem monkeydoc Draws a rect9.
+		Draws the rect9's margins rect using the current BlendMode.
 		The margins rect have his own color as an optional parameter.
-		
 		The vertex coordinates are also transform by the current Matrix. 	
 		#end		
-		Method DrawMarginsRect(		rect8:Rect8f,
+		Method DrawMarginsRect(		rect9:Rect9f,
 									colorMarginsRect:Color=_.Color	)
 									
 			Local oldColor:=_.Color
 			_.Color=colorMarginsRect
-			Self.DrawRect(rect8.MarginsRect)
+			Self.DrawRect(rect9.MarginsRect)
 			_.Color=oldColor
 		End 
 		
@@ -1273,12 +1144,11 @@ Class Canvas
 		End 
 		
 		Field _:Canvas
-	End 
 
+	End 
+	
 	#rem monkeydoc Adds a light to the canvas.
-	
 	This method must only be called while the canvas is in lighting mode, ie: between calls to [[BeginLighting]] and [[EndLighting]].
-	
 	#end
 	Method AddLight( light:Image,tx:Float,ty:Float )
 		DebugAssert( _lighting,"Canvas.AddLight() can only be used while lighting" )
@@ -1334,9 +1204,7 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Adds a shadow caster to the canvas.
-	
 	This method must only be called while the canvas is in lighting mode, ie: between calls to [[BeginLighting]] and [[EndLighting]].
-	
 	#end
 	Method AddShadowCaster( caster:ShadowCaster,tx:Float,ty:Float )
 		DebugAssert( _lighting,"Canvas.AddShadowCaster() can only be used while lighting" )
@@ -1385,11 +1253,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Copies a pixmap from the rendertarget.
-
 	This method must not be called while the canvas is in lighting mode.
-
 	@param rect The rect to copy.
-
 	#end
 	Method CopyPixmap:Pixmap( rect:Recti )
 		DebugAssert( Not _lighting,"Canvas.CopyPixmap() cannot be used while lighting" )
@@ -1416,9 +1281,7 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Gets a pixel color.
-	
 	Returns the color of the pixel at the given coordinates.
-	
 	#end
 	Method GetPixel:Color( x:Int,y:Int )
 		
@@ -1430,9 +1293,7 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Gets a pixel color.
-	
 	Returns the ARGB color of the pixel at the given coordinates.
-	
 	#end
 	Method GetPixelARGB:UInt( x:Int,y:Int )
 
@@ -1444,13 +1305,9 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Clears the viewport.
-	
 	Clears the current viewport to `color`.
-	
 	This method must not be called while the canvas is in lighting mode.
-
 	@param color Color to clear the viewport to.
-	
 	#end
 	Method Clear( color:Color )
 		DebugAssert( Not _lighting,"Canvas.Clear() cannot be used while lighting" )
@@ -1466,11 +1323,8 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Flushes drawing commands.
-	
 	Flushes any outstanding drawing commands in the draw buffer.
-	
 	This is only generally necessary if you are drawing to an image.
-	
 	#end
 	Method Flush()
 		
@@ -1486,25 +1340,21 @@ Class Canvas
 		_drawVB.Unlock()
 		
 		'Render ambient
-		'		
 		RenderDrawOps( 0 )
 		
 		If _lighting
 		
 			'render diffuse gbuffer
-			'
 			_device.RenderTarget=_gbrtargets[0]
 			
 			RenderDrawOps( 1 )
 			
 			'render normal gbuffer
-			'
 			_device.RenderTarget=_gbrtargets[1]
 			
 			RenderDrawOps( 2 )
 
 			'back to rendertarget
-			'			
 			_device.RenderTarget=_rtarget
 			
 		Endif
@@ -1581,13 +1431,9 @@ Class Canvas
 	End
 	
 	#rem monkeydoc Renders lighting and ends lighting mode.
-	
 	Renders any lights and shadows casters added to the canvas through calls to [[AddLight]] and [[AddShadowCaster]] and ends lighting mode.
-	
 	Any lights and shadow casters added to the canvas are also removed and must be added again later if you want to render them again.
-	
 	This method must be called while the canvas is in lighting mode.
-	
 	#end
 	Method EndLighting()
 		DebugAssert( _lighting,"Not lighting" )
@@ -1740,6 +1586,9 @@ Class Canvas
 	Const MaxShadowVertices:=16384
 	Const MaxLights:=1024
 	
+	'Used to access to the sublibrary rect9
+	Field _trect9:TRect9=New TRect9()' Added by iDkP
+	
 	Function Init2()
 		Global inited:=False
 		If inited Return
@@ -1773,6 +1622,8 @@ Class Canvas
 	End
 	
 	Method Init( rtarget:RenderTarget,device:GraphicsDevice )
+
+		_trect9._=Self ' Added by iDkP
 		Init2()
 		
 		_rtarget=rtarget
