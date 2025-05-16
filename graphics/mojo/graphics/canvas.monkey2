@@ -5,8 +5,6 @@ Using stdlib.math.matrices..
 
 Using stdlib.graphics..
 
-Alias RectLibf:stdlib.math.types.Rect<Float> 'Added by iDkP
-
 #rem monkeydoc Outline modes.
 
 Outline modes are used with the [[Canvas.OutlineMode]] property and control the style
@@ -1054,10 +1052,6 @@ Class Canvas
 	End 
 
 	Class TRect9
-
-		'----------------------------------------------------
-		'---------------------------------------------------- Rect9 Draws
-		'----------------------------------------------------	
 		
 		#rem 
 			Mini-Library Rect9 (draw a rect9 struct)
@@ -1076,76 +1070,81 @@ Class Canvas
 			and reintegrated my old libraries' stuff, the data was separated from the graphical engine.
 		#end
 		
-		#rem monkeydoc Draws a rect9.
-		Draws a rect9 in the current Color using the current BlendMode. 
+		#rem monkeydoc Draws a rect9, inner/outter rect using the same color.
+		Draws a rect9 in the current Color using the current BlendMode.
 		The vertex coordinates are also transform by the current Matrix. 	
+		@param The rect9 to draw
 		#end	
-		Method Draw( rect9:Rect9f )
-			Self.DrawRect(rect9.MarginsRect)
+		Method DrawWireframe<T>( this:Rect9<T> )
+			Wire(_,this._rect0)
+			Wire(_,this._rect1)
 		End 
 		
-		#rem monkeydoc Draws a rect9
+		#rem monkeydoc Draws a rect9, inner/outter rect using different colors.
 		Draws a rect9 using the current BlendMode.
-		The outter rect and the margins rect have their own colors.
+		The outter rect and the inner rect have their own colors.
 		The vertex coordinates are also transform by the current Matrix. 	
+		@param The rect9 to draw
+		@param Outter frame color
+		@param Inner frame color
 		#end
-		Method Draw(	rect9:Rect9f,
-						colorOutterRect:Color,colorMarginsRect:Color	)
-						
-			Local oldColor:=_.Color
-			_.Color=colorOutterRect
-			Self.DrawRect(rect9.Rect)
-			_.Color=colorMarginsRect
-			Self.DrawRect(rect9.MarginsRect)
-			_.Color=oldColor
-		End 	
-		
-		#rem monkeydoc Draws a rect9.
-		Draws the rect9s outter rect using the current BlendMode.
-		The outter rect have his own color as an optional parameter.
-		The vertex coordinates are also transform by the current Matrix. 	
-		#end	
-		Method DrawRect(	rect9:Rect9f,
-							colorOutterRect:Color=_.Color	)
+		Method DrawWireframe<T>( this:Rect9<T>, colorOutterRect:Color, colorInnerRect:Color )
 							
 			Local oldColor:=_.Color
 			_.Color=colorOutterRect
-			Self.DrawRect(rect9.Rect)
+			Wire(_,this.Outter)
+			_.Color=colorInnerRect
+			Wire(_,this.Inner)
+			_.Color=oldColor
+		End 	
+		
+		#rem monkeydoc Draws the outter frame of a rect9, precise the color.
+		Draws the rect9's outter rect using the current BlendMode.
+		The outter rect have his own color as an optional parameter.
+		The vertex coordinates are also transform by the current Matrix. 	
+		@param The rect9 to draw
+		@param Outter frame color
+		#end	
+		Method DrawOutterFrame<T>( this:Rect9<T>, colorOutterRect:Color )
+								
+			Local oldColor:=_.Color
+			_.Color=colorOutterRect
+			Wire(_,this._rect0)
 			_.Color=oldColor
 		End 
 		
-		#rem monkeydoc Draws a rect9.
-		Draws the rect9's margins rect using the current BlendMode.
-		The margins rect have his own color as an optional parameter.
+		#rem monkeydoc Draws a rect9's inner frame.	
+		Draws the rect9's inner rect using the current BlendMode.
 		The vertex coordinates are also transform by the current Matrix. 	
+		The inner rect have his own color as an optional parameter.
+		@param The rect9 to draw
+		@param Inner frame color
 		#end		
-		Method DrawMarginsRect(		rect9:Rect9f,
-									colorMarginsRect:Color=_.Color	)
+		Method DrawInnerFrame<T>( this:Rect9<T>, colorInnerRect:Color=_.Color )
 									
 			Local oldColor:=_.Color
-			_.Color=colorMarginsRect
-			Self.DrawRect(rect9.MarginsRect)
+			_.Color=colorInnerRect
+			Wire(_,this.Inner)
 			_.Color=oldColor
-		End 
-		
-		Protected 
+		End 	
+
+		Private 	
 	
 		#rem monkeydoc @hidden
 		#end	
-		Method DrawRect( rect:RectLibf )
+		Function Wire<T>( canvas:Canvas, rect:Rect<T> )
 			Local x0:=rect.min.x
 			Local y0:=rect.min.y
 			Local x1:=rect.max.x
 			Local y1:=rect.max.y
-			_.DrawLine(x0,y0,x1,y0)
-			_.DrawLine(x1,y0,x1,y1)
-			_.DrawLine(x1,y1,x0,y1)
-			_.DrawLine(x0,y1,x0,y0)
+			canvas.DrawLine(x0,y0,x1,y0)
+			canvas.DrawLine(x1,y0,x1,y1)
+			canvas.DrawLine(x1,y1,x0,y1)
+			canvas.DrawLine(x0,y1,x0,y0)
 		End 
 		
 		Field _:Canvas
-
-	End 
+	End
 	
 	#rem monkeydoc Adds a light to the canvas.
 	This method must only be called while the canvas is in lighting mode, ie: between calls to [[BeginLighting]] and [[EndLighting]].
