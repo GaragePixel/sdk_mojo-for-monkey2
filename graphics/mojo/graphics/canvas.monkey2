@@ -121,7 +121,13 @@ Class Canvas
 		_rbounds=_rboundsStack.Pop()
 		_rmatrix=_rmatrixStack.Pop()
 	End
-	
+
+	#rem monkeydoc Get access to the draw methods.
+	#end
+	Property Draw:TDraw() 'Added by iDkP
+		Return _tdraw
+	End
+
 	#rem monkeydoc The current render target.
 	#end	
 	Property RenderTarget:RenderTarget()
@@ -443,7 +449,668 @@ Class Canvas
 	Method DrawPoint( v:Vec2f )
 		DrawPoint( v.x,v.y )
 	End
+
+	#rem monkeydoc Mini-Library Draw
+	@author iDkP from GaragePixel
+	@since 2025-05-25
+			
+	Helpers to program draw ops in mojo
+
+	Note: the TDraw is a singleton created in the Canvas class
+	and addressable as a property. You call the property Draw to get 
+	access to the draw functions.
+			
+	canvas.Draw.Line( params here )
+
+	About the old draw methods in canvas, it will be declared as deprecated but
+	will be preserved until a new version of the project Monkey2. You can
+	use the actual mojo for your old project, but use Mojo.Draw for your next
+	project.
+	#end
+	Class TDraw
+
+		#rem monkeydoc Get access to the Rect9 methods.
+		#end
+		Property Rect9:TRect9()
+			Return _trect9
+		End
+
+		#rem monkeydoc Get access to the Debug methods.
+		#end
+		Property Debug:TDebug()
+			Return _tdebug
+		End
+
+		#rem monkeydoc Draw an image tiled within a rectangle with various tiling patterns.
+		@author iDkP for GaragePixel
+		@since 2025-05-23
+		
+		This method tiles an image throughout a rectangle using specified tiling mode.
+		It automatically handles scissoring to prevent drawing outside the rectangle bounds.
+		Uses DrawImageFit for each individual tile in the pattern.
 	
+		@param imgTile The image to be tiled
+		@param this The rectangle that will contain the tiled pattern
+		@param mode Controls tiling arrangement (combination of horizontal and vertical modes)
+		#end
+		Method ImageTiled<T>( imgTile:Image, this:Rect<T>, mode:TileMode=TileMode.Tiled )
+			
+			' iDkP note 2025-05-23:
+			'
+			'	TODO: Make a shader for tiling
+			'
+			'	We can do it faster with a shader. For now, this function uses DrawImageFit
+			'	and the function Tiled of Rect to compute the tiles.
+			'	With this GPU-non shader version of the tiling, we can access to the
+			'	tile individually instead of just repeating the same tile.
+			'	Since DrawImageTiled do not offer this granulality, it will be replaced
+			'	by a shader version under a few time.
+	
+			Local tileField:=this.Tiled<T>(imgTile.Bounds,mode) '<-- We can use the Int type
+			
+			If tileField=Null Return 'Do not draw flat tile
+			
+			Local scissor_old:=_.Scissor
+			_.Scissor=this
+			
+			For Local tile:=Eachin tileField 
+				ImageFit( imgTile, tile )
+			End
+			
+			_.Scissor=scissor_old
+		End
+	
+		#rem monkeydoc Draw an image using a rect as reference.
+		@author iDkP for GaragePixel
+		@since 2025-05-23
+		@param image the image to draw
+		@param fit the rect used to get the image in position
+		#end 
+		Method ImageFit<T>( 	image:Image, 
+								fit:Rect<T> )
+									
+			Local sH:Float=fit.Height/image.Height
+			Local sW:Float=fit.Width/image.Width
+			_.DrawImage(image,fit.X,fit.Y,0,sW,sH)
+		End 
+		
+		'======================================================================================== DEBUG
+		
+		Class TDebug 
+		
+			#rem monkeydoc Draw a X with lines in a square for debugging purpose
+			@author jl (jeanluc as Seyanjin)
+			
+				│ x,y 	0	0	│
+				│ 0 	0 	0	│
+				│ 0 	0 	w,w	│
+								
+			@param x the position x of the square
+			@param y the position y of the square
+			@param w the size w of the square
+			#end 
+			Method Cross( x:Float, y:Float, w:Float ) 'iDkP added: Doc
+		
+				Local x0 := x-w
+				Local y0 := y-w
+				Local x1 := x+w
+				Local y1 := y+w
+				
+				_._.DrawLine( x0, y, x1, y )
+				_._.DrawLine( x, y0, x, y1 )
+			End
+		
+			#rem monkeydoc Draw a X with lines in a Rect for debugging purpose
+			@author iDkP for GaragePixel
+			@since 2025-05-24
+			
+				│ x,y 	0	0	│
+				│ 0 	0 	0	│
+				│ 0 	0 	u,v	│
+				
+			@param x the position x of the square
+			@param y the position y of the square
+			@param u the absolute position u of the square
+			@param v the absolute position v of the square
+			#end 
+			Method Cross<T>( x:T, y:T, u:T, v:T )
+				
+				Local x0 := x
+				Local y0 := y
+				Local x1 := u
+				Local y1 := v
+				
+				_._.DrawLine( x0, y, x1, y )
+				_._.DrawLine( x, y0, x, y1 )
+			End
+			
+			#rem monkeydoc Draw a X with lines in a quad for debugging purpose
+			@author iDkP for GaragePixel
+			@since 2025-05-23
+			@param p0 the four vertices of a quad
+			@param p1 the four vertices of a quad
+			@param p2 the four vertices of a quad
+			@param p3 the four vertices of a quad
+			#end 
+			Method Cross<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+				
+				_._.DrawLine(	p0.x,	p0.y,	p2.x,	p2.y)
+				_._.DrawLine(	p1.x,	p1.y,	p3.x,	p3.y)
+			End
+		
+			#rem monkeydoc Draw a Z with lines in a quad for debugging purpose
+			@author iDkP for GaragePixel
+			@since 2025-05-23
+			@param p0 the four vertices of a quad
+			@param p1 the four vertices of a quad
+			@param p2 the four vertices of a quad
+			@param p3 the four vertices of a quad
+			#end
+			Method Z<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+				
+				_._.DrawLine(	p0.x,	p0.y,	p1.x,	p1.y)
+				_._.DrawLine(	p2.x,	p2.y,	p3.x,	p3.y)
+				_._.DrawLine(	p3.x,	p3.y,	p4.x,	p4.y)
+			End
+		
+			#rem monkeydoc Draw a line \ in a quad for debugging purpose
+			@author iDkP for GaragePixel
+			@since 2025-05-23
+			@param p0 the four vertices of a quad
+			@param p1 the four vertices of a quad
+			@param p2 the four vertices of a quad
+			@param p3 the four vertices of a quad
+			#end
+			Method Slash<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+		
+				_._.DrawLine(	p2.x,	p2.y,	p3.x,	p3.y)
+			End
+			
+			Protected 
+			
+			Field _:TDraw 'parent of TDebug
+			
+		End
+		
+		'================================================================================= Rect9
+
+		#rem monkeydoc Mini-Library Rect9 (draw a rect9 struct)
+		@author iDkP from GaragePixel
+		@since 2025-05-14
+				
+		Helpers to draw a Rect9.
+				
+		Note: the TRect9 is a singleton created in the Canvas class
+		and addressable as a property. You call the property Rect9 to get 
+		access to the draw functions.
+				
+		canvas.Rect9.Wireframe( myrect9 )
+				
+		The draw function was originally inclued inside the Rect9, but when I've created stdlib
+		and reintegrated my old libraries' stuff, the data was separated from the graphic engine.
+		#end
+		Class TRect9
+
+			#rem monkeydoc Get access to the Debug methods.
+			#end
+			Property Debug:TDebug()
+				Return _tdebug
+			End
+	
+			#rem monkeydoc Draws nine images arranged in a 9-patch pattern within a Rect9 using arrays.
+			@author iDkP from GaragePixel
+			@since 2025-05-24
+			
+			Draws a complete 9-patch image using the current BlendMode.
+			Uses arrays for images and tiling modes to draw all nine patches of the Rect9.
+			The patches are arranged in a 3x3 grid according to the Rect9 layout:
+			
+			│ 1 2 3 │
+			│ 4 5 6 │
+			│ 7 8 9 │
+			
+			The vertex coordinates are also transformed by the current Matrix.
+			
+			@param this The Rect9 defining the layout boundaries
+			@param tiles Array of 9 images in reading order (top-left to bottom-right)
+			@param tileModes Array of 9 TileMode values corresponding to each image
+			#end
+			Method Image<T>( this:Rect9<T>, tiles:Image[], tileModes:TileMode[] )
+			
+				'Compute the rect9's patches
+				Local patches:=this.Patches
+		
+				'Draw the patches
+				For Local tile:=0 Until 8
+					_.DrawImageTiled( tiles[tile], patches[tile], modes[tile] )
+				End
+			End 
+	
+			#rem monkeydoc Draws nine images arranged in a 9-patch pattern using direct pointers.
+			@author iDkP from GaragePixel
+			@since 2025-05-24
+			
+			Draws a complete nine-patch image using the current BlendMode.
+			It's the faster method used in mojo to draw nine-patch using rect9 and mojo.image.
+			Uses direct pointers to rect9, image and tilemode arrays for maximum performance.
+			The pointers points the 1st element of each collection objects.
+			
+			The patches are arranged in a 3x3 grid according to the Rect9 layout:
+	
+			│ 1 2 3 │
+			│ 4 5 6 │
+			│ 7 8 9 │
+	
+			The vertex coordinates are also transformed by the current Matrix.
+			
+			@param this The Rect9 defining the layout boundaries
+			@param tiles Pointer to array of 9 images in reading order (top-left to bottom-right)
+			@param tileModes Pointer to array of 9 TileMode values corresponding to each image
+			#end
+			Method Image<T>( this:Rect9<T> Ptr, tiles:Image Ptr, tileModes:TileMode Ptr )
+			
+				'Compute the rect9's patches
+				Local patches:=this[0].Patches
+		
+				'Draw the patches
+				For Local tile:=0 Until 8
+					_.ImageTiled( tiles[tile], patches[tile], modes[tile] )
+				End
+			End 
+	
+			#rem monkeydoc Draws nine images arranged in a nine-patch pattern within a Rect9.
+			@author iDkP from GaragePixel
+			@since 2025-05-24
+			
+			Draws a 9-patch image using the current BlendMode.
+			The images are positioned according to the Rect9 patches layout, with each edge patches having theirs own tiling mode
+			while the central patch can have is own tiling mode. The corners are always fitted.
+			It's a fast way to draw nine-patches.
+	
+			Layouts:
+	
+				Patches:
+					│ 1 2 3 │
+					│ 4 5 6 │
+					│ 7 8 9 │
+					
+				Edges mode:
+					│ 0 1 0 │
+					│ 1 0 1 │
+					│ 0 1 0 │
+					
+				Middle mode:
+					│ 0 0 0 │
+					│ 0 1 0 │
+					│ 0 0 0 │
+			
+			The vertex coordinates are also transformed by the current Matrix.
+			
+			@param this The Rect9 defining the layout boundaries
+			
+			@param cornerTopLeft Image for top-left corner
+			@param top Image for top edge
+			@param cornerTopRight Image for top-right corner
+			@param left Image for left edge
+			@param middle Image for center area
+			@param right Image for right edge
+			@param cornerBottomLeft Image for bottom-left corner
+			@param bottom Image for bottom edge
+			@param cornerBottomRight Image for bottom-right corner
+			
+			@param edgeMode TileMode for each edge patches
+			@param middleMode TileMode for the middle patch
+			#end		
+			Method Image<T>(	this:Rect9<T>,
+												
+								' Patches:
+												
+								cornerTopLeft:Image,		top:Image,					cornerTopRight:Image,		
+								left:Image,					middle:Image,				right:Image,
+								cornerBottomLeft:Image,		bottom:Image,				cornerBottomRight:Image,
+												
+								' Edges mode:
+					
+								edgeMode:TileMode=TileMode.Fit,
+												
+								' Middle mode:
+	
+								middleMode:TileMode=TileMode.Fit	)
+				
+				'Init a sequence of:
+				Local imgCorners:=New Image[](		cornerTopLeft,		cornerTopRight,			cornerBottomRight,		cornerBottomLeft)
+				Local imgEdges:=New Image[](		top,				right,					bottom,					left)
+				
+				'Compute the rect9's patches
+				Local rectCorners:=this.Corners
+				Local rectEdges:=this.NotCorners
+				
+				'Draw the image of the inside view
+				If middleMode=TileMode.Fit
+					_.ImageFit( imgEdges[edge], this.Inner )
+				Else 
+					_.ImageTiled( imgEdges[edge], this.Inner )
+				End
+				
+				'Draw the images of the corners
+				For Local corner:=0 Until 3
+					_.ImageFit( imgCorners[corner], rectCorners[corner] )
+				End
+				
+				'Draw the images of the edges
+				If imgEdgeModes=TileMode.Fit
+					For Local edge:=0 Until 3
+						_.ImageFit( imgEdges[edge], rectEdges[edge] )
+					End 
+				Else 
+					For Local edge:=0 Until 3
+						_.ImageTiled( imgEdges[edge], rectEdges[edge] )
+					End 
+				End 
+			End 
+	
+			#rem monkeydoc Draws nine images arranged in a nine-patch pattern within a Rect9 with individual tiling modes.
+			@author iDkP from GaragePixel
+			@since 2025-05-24
+			
+			Draws a complete 9-patch image using the current BlendMode.
+			Each of the nine patches has its own image and tiling mode for maximum flexibility.
+			The patches are arranged in a 3x3 grid and positioned according to the Rect9 layout:
+	
+			│ 1 2 3 │
+			│ 4 5 6 │
+			│ 7 8 9 │
+			
+			The vertex coordinates are also transformed by the current Matrix.
+			
+			@param this The Rect9 defining the layout boundaries
+			
+			@param cornerTopLeft Image for top-left corner (patch 1)
+			@param top Image for top edge (patch 2)
+			@param cornerTopRight Image for top-right corner (patch 3)
+			@param left Image for left edge (patch 4)
+			@param middle Image for center area (patch 5)
+			@param right Image for right edge (patch 6)
+			@param cornerBottomLeft Image for bottom-left corner (patch 7)
+			@param bottom Image for bottom edge (patch 8)
+			@param cornerBottomRight Image for bottom-right corner (patch 9)
+			
+			@param patch1mode TileMode for top-left corner
+			@param patch2mode TileMode for top edge
+			@param patch3mode TileMode for top-right corner
+			@param patch4mode TileMode for left edge
+			@param patch5mode TileMode for center area
+			@param patch6mode TileMode for right edge
+			@param patch7mode TileMode for bottom-left corner
+			@param patch8mode TileMode for bottom edge
+			@param patch9mode TileMode for bottom-right corner
+			#end
+			Method Image<T>(	this:Rect9<T>,
+									
+								' Patches:
+												
+								cornerTopLeft:Image,		top:Image,					cornerTopRight:Image,		
+								left:Image,					middle:Image,				right:Image,
+								cornerBottomLeft:Image,		bottom:Image,				cornerBottomRight:Image,
+												
+								' Patches mode:
+		
+								patch1mode:TileMode,		patch2mode:TileMode,		patch3mode:TileMode,
+								patch4mode:TileMode,		patch5mode:TileMode,		patch6mode:TileMode,
+								patch7mode:TileMode,		patch8mode:TileMode,		patch9mode:TileMode		)
+		
+				'Init a sequence of:
+				Local imgs:=New Image[](		cornerTopLeft,				top,						cornerTopRight,			
+												left,						middle, 					right,
+												cornerBottomRight,			bottom,						cornerBottomRight		)
+		
+				Local modes:=New TileMode[](	patch1mode,					patch2mode,					patch3mode,	
+												patch4mode,					patch5mode,					patch6mode,
+												patch7mode,					patch8mode,					patch9mode				)
+			
+				'Compute the rect9's patches
+				Local patches:=this.Patches
+		
+				'Draw the patches
+				For Local tile:=0 Until 8
+					_.ImageTiled( imgs[tile], patches[tile], modes[tile] )
+				End
+			End 
+			
+			#rem monkeydoc Draws a rect9, inner/outter rect using the same color.
+			Draws a rect9 in the current Color using the current BlendMode.
+			The vertex coordinates are also transform by the current Matrix. 	
+			@param The rect9 to draw
+			#end	
+			Method Wireframe<T>( this:Rect9<T> )
+				
+				Wire(__,this._rect0)
+				Wire(__,this._rect1)
+			End 
+			
+			#rem monkeydoc Draws a rect9, inner/outter rect using different colors.
+			Draws a rect9 using the current BlendMode.
+			The outter rect and the inner rect have their own colors.
+			The vertex coordinates are also transform by the current Matrix. 	
+			@param The rect9 to draw
+			@param Outter frame color
+			@param Inner frame color
+			#end
+			Method Wireframe<T>( this:Rect9<T>, colorOutterRect:Color, colorInnerRect:Color )
+				
+				Local oldColor:=__.Color
+				__.Color=colorOutterRect
+				Wire(__,this.Outter)
+				__.Color=colorInnerRect
+				Wire(__,this.Inner)
+				__.Color=oldColor
+			End 	
+			
+			#rem monkeydoc Draws the outter frame of a rect9, precise the color.
+			Draws the rect9's outter rect using the current BlendMode.
+			The outter rect have his own color as an optional parameter.
+			The vertex coordinates are also transform by the current Matrix. 	
+			@param The rect9 to draw
+			@param Outter frame color
+			#end	
+			Method OutterFrame<T>( this:Rect9<T>, colorOutterRect:Color )
+				
+				Local oldColor:=__.Color
+				__.Color=colorOutterRect
+				Wire(__,this._rect0)
+				__.Color=oldColor
+			End 
+			
+			#rem monkeydoc Draws a rect9's inner frame.	
+			Draws the rect9's inner rect using the current BlendMode.
+			The vertex coordinates are also transform by the current Matrix. 	
+			The inner rect have his own color as an optional parameter.
+			@param The rect9 to draw
+			@param Inner frame color
+			#end		
+			Method InnerFrame<T>( this:Rect9<T>, colorInnerRect:Color=__.Color )
+				
+				Local oldColor:=__.Color
+				__.Color=colorInnerRect
+				Wire(__,this.Inner)
+				__.Color=oldColor
+			End 	
+	
+			#rem monkeydoc Draw the outter rect with a H inside representing the zone delimitations
+			Because the wireframe method actually draws the two rectangles of rect9, while this
+			method draws the lines projected from the inner rect to the outter rect.
+			@param The Rect9 to draw
+			@param optional color for the exterior frame
+			@param optional color for the H lines
+			#end 
+			Method GridH<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )				
+				
+				Local old_color:=__.Color
+				
+				__.Color=externColor
+				Wire(__,this.Outter)
+				
+				__.Color=gridColor
+				H(this)
+				
+				__.Color=old_color
+			End
+			
+			Class TDebug
+		
+				#rem monkeydoc Draw the outter rect with a H inside and a Z in the H zones
+				Because the wireframe method actually draws the two rectangles of rect9, while this
+				method draws the lines projected from the inner rect to the outter rect.
+				@param The Rect9 to draw
+				@param optional color for the exterior frame
+				@param optional color for the Z lines
+				#end 
+				Method GridZ<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )
+					
+					Local old_color:=_c.Color
+					
+					__.Color=externColor
+					Wire(__,this.Outter)
+					
+					__.Color=gridColor
+					H(this)
+					Z(this)
+					
+					__.Color=old_color
+				End
+			
+				#rem monkeydoc Draw the outter rect with a H inside and a X in the H zones
+				Because the wireframe method actually draws the two rectangles of rect9, while this
+				method draws the lines projected from the inner rect to the outter rect.
+				@param The Rect9 to draw
+				@param optional color for the exterior frame
+				@param optional color for the X lines
+				#end
+				Method GridCross<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )					
+					
+					Local old_color:=__.Color
+					
+					__.Color=externColor
+					Wire(__,this.Outter)
+					
+					__.Color=gridColor
+					H(this)
+					Self.Cross(this) 'Self is used by caution
+					
+					__.Color=old_color
+				End
+			
+				#rem monkeydoc Draw only the grid H
+				Because the wireframe method actually draws the two rectangles of rect9, while this
+				method draws the lines projected from the inner rect to the outter rect.
+				@param The Rect9 to draw
+				#end
+				Method H<T>( this:Rect9<T>)
+					
+					'V Lines
+					__.DrawLine(	this.InnerLeft,		this.Top,			this.InnerLeft,		this.Bottom)
+					__.DrawLine(	this.InnerRight,	this.Top,			this.InnerRight,	this.Bottom)
+					
+					'H Lines
+					__.DrawLine(	this.Left,			this.InnerTop,		this.Right,			this.InnerTop)
+					__.DrawLine(	this.Left,			this.InnerBottom,	this.Right,			this.InnerBottom)
+				End 
+			
+				#rem monkeydoc Draw only the Z
+				@param The Rect9 to draw
+				#end
+				Method Z<T>( this:Rect9<T> )
+					Local verts:=this.Vertices
+					Zinternal(this, verts)
+				End
+			
+				#rem monkeydoc Draw only the cross (X shape)
+				@param The Rect9 to draw
+				#end
+				Method Cross<T>( this:Rect9<T> ) 'iDkP: CANNOT CALL IT 'DRAWX' BECAUSE INTERNAL BUG!
+					
+					Local verts:Vec2<T>[]=this.Vertices
+					
+					Zinternal(this, verts)
+			
+					'X Boxes 1,2,3
+					__.DrawLine(	verts[00].x,	verts[01].y,	verts[05].x,	verts[04].y)
+					__.DrawLine(	verts[01].x,	verts[02].y,	verts[06].x,	verts[05].y)
+					__.DrawLine(	verts[02].x,	verts[03].y,	verts[07].x,	verts[06].y)
+					
+					'X Boxes 4,5,6
+					__.DrawLine(	verts[04].x,	verts[05].y,	verts[09].x,	verts[08].y)
+					__.DrawLine(	verts[05].x,	verts[06].y,	verts[10].x,	verts[09].y)
+					__.DrawLine(	verts[06].x,	verts[07].y,	verts[11].x,	verts[10].y)
+			
+					'X Boxes 7,8,9
+					__.DrawLine(	verts[08].x,	verts[09].y,	verts[13].x,	verts[12].y)
+					__.DrawLine(	verts[09].x,	verts[10].y,	verts[14].x,	verts[13].y)
+					__.DrawLine(	verts[10].x,	verts[11].y,	verts[15].x,	verts[14].y)
+				End
+			
+				Private 
+			
+				#rem monkeydoc @hidden
+				#end
+				Method Zinternal<T>( this:Rect9<T>, verts:Vec2<T>[] )
+					
+					'Z Boxes 1,2,3
+					__.DrawLine(	verts[01].x,	verts[01].y,	verts[04].x,	verts[04].y)
+					__.DrawLine(	verts[02].x,	verts[02].y,	verts[05].x,	verts[05].y)
+					__.DrawLine(	verts[03].x,	verts[03].y,	verts[06].x,	verts[06].y)
+					
+					'Z Boxes 4,5,6
+					__.DrawLine(	verts[05].x,	verts[05].y,	verts[08].x,	verts[08].y)
+					__.DrawLine(	verts[06].x,	verts[06].y,	verts[09].x,	verts[09].y)
+					__.DrawLine(	verts[07].x,	verts[07].y,	verts[10].x,	verts[10].y)
+			
+					'Z Boxes 7,8,9
+					__.DrawLine(	verts[09].x,	verts[09].y,	verts[12].x,	verts[12].y)
+					__.DrawLine(	verts[10].x,	verts[10].y,	verts[13].x,	verts[13].y)
+					__.DrawLine(	verts[11].x,	verts[11].y,	verts[14].x,	verts[14].y)
+				End	
+				
+				Protected
+				
+				Field _:TRect9 'parent of TRect9.TDebug
+				
+				Field __:Canvas 'canvas of the tdebug's trect's tdraw's parent (bypass some redundant internal pointing processes)
+			End 
+			
+			Private
+	
+			#rem monkeydoc @hidden
+			#end
+			Function Wire<T>( canvas:Canvas, rect:Rect<T> )
+				Local x0:=rect.min.x
+				Local y0:=rect.min.y
+				Local x1:=rect.max.x
+				Local y1:=rect.max.y
+				canvas.DrawLine(x0,y0,x1,y0)
+				canvas.DrawLine(x1,y0,x1,y1)
+				canvas.DrawLine(x1,y1,x0,y1)
+				canvas.DrawLine(x0,y1,x0,y0)
+			End 
+			
+			Protected 
+			
+			Field _:TDraw 'parent of TRect9
+			
+			Field __:Canvas 'canvas of the trect's tdraw's parent (bypass some redundant internal pointing processes)
+			
+			Field _tdebug:TDebug=New TDebug() 'Special trect9's draw functions for debugging purpose
+		End 
+
+		Private
+		
+		Field _:Canvas 'parent of TDraw
+		
+		Field _trect9:TRect9=New TRect9() 'Rect9's dedicaced draw methods
+		
+		Field _tdebug:TDebug=New TDebug() 'Special tdraw's draw functions for debugging purpose
+	End
+
 	Private
 
 	Method DrawOutlineLine( x0:Float,y0:Float,x1:Float,y1:Float )
@@ -1049,101 +1716,6 @@ Class Canvas
 		scaleX:Float,scaleY:Float)
 		
 		DrawImage(image.Image,x,y,rotation,scaleX,scaleY)
-	End 
-
-	Class TRect9
-		
-		#rem 
-			Mini-Library Rect9 (draw a rect9 struct)
-			@Author: iDkP from GaragePixel
-			@Date: 2025-05-14
-			
-			Helpers to draw a Rect9 for debug purpose.
-			
-			Note: the TRect9 is a singleton created in the Canvas class
-			and addressable as a property. You call the property Rect9 to get 
-			access to the draw functions.
-			
-			canvas.Rect9.Draw( myrect9 )
-			
-			The draw function was originally inclued inside the Rect9, but when I've created stdlib
-			and reintegrated my old libraries' stuff, the data was separated from the graphical engine.
-		#end
-		
-		#rem monkeydoc Draws a rect9, inner/outter rect using the same color.
-		Draws a rect9 in the current Color using the current BlendMode.
-		The vertex coordinates are also transform by the current Matrix. 	
-		@param The rect9 to draw
-		#end	
-		Method DrawWireframe<T>( this:Rect9<T> )
-			Wire(_,this._rect0)
-			Wire(_,this._rect1)
-		End 
-		
-		#rem monkeydoc Draws a rect9, inner/outter rect using different colors.
-		Draws a rect9 using the current BlendMode.
-		The outter rect and the inner rect have their own colors.
-		The vertex coordinates are also transform by the current Matrix. 	
-		@param The rect9 to draw
-		@param Outter frame color
-		@param Inner frame color
-		#end
-		Method DrawWireframe<T>( this:Rect9<T>, colorOutterRect:Color, colorInnerRect:Color )
-							
-			Local oldColor:=_.Color
-			_.Color=colorOutterRect
-			Wire(_,this.Outter)
-			_.Color=colorInnerRect
-			Wire(_,this.Inner)
-			_.Color=oldColor
-		End 	
-		
-		#rem monkeydoc Draws the outter frame of a rect9, precise the color.
-		Draws the rect9's outter rect using the current BlendMode.
-		The outter rect have his own color as an optional parameter.
-		The vertex coordinates are also transform by the current Matrix. 	
-		@param The rect9 to draw
-		@param Outter frame color
-		#end	
-		Method DrawOutterFrame<T>( this:Rect9<T>, colorOutterRect:Color )
-								
-			Local oldColor:=_.Color
-			_.Color=colorOutterRect
-			Wire(_,this._rect0)
-			_.Color=oldColor
-		End 
-		
-		#rem monkeydoc Draws a rect9's inner frame.	
-		Draws the rect9's inner rect using the current BlendMode.
-		The vertex coordinates are also transform by the current Matrix. 	
-		The inner rect have his own color as an optional parameter.
-		@param The rect9 to draw
-		@param Inner frame color
-		#end		
-		Method DrawInnerFrame<T>( this:Rect9<T>, colorInnerRect:Color=_.Color )
-									
-			Local oldColor:=_.Color
-			_.Color=colorInnerRect
-			Wire(_,this.Inner)
-			_.Color=oldColor
-		End 	
-
-		Private 	
-	
-		#rem monkeydoc @hidden
-		#end	
-		Function Wire<T>( canvas:Canvas, rect:Rect<T> )
-			Local x0:=rect.min.x
-			Local y0:=rect.min.y
-			Local x1:=rect.max.x
-			Local y1:=rect.max.y
-			canvas.DrawLine(x0,y0,x1,y0)
-			canvas.DrawLine(x1,y0,x1,y1)
-			canvas.DrawLine(x1,y1,x0,y1)
-			canvas.DrawLine(x0,y1,x0,y0)
-		End 
-		
-		Field _:Canvas
 	End
 	
 	#rem monkeydoc Adds a light to the canvas.
@@ -1585,8 +2157,8 @@ Class Canvas
 	Const MaxShadowVertices:=16384
 	Const MaxLights:=1024
 	
-	'Used to access to the sublibrary rect9
-	Field _trect9:TRect9=New TRect9()' Added by iDkP
+	'Used to access to the sublibrary draw
+	Field _tdraw:TDraw=New TDraw()' Added by iDkP
 	
 	Function Init2()
 		Global inited:=False
@@ -1619,10 +2191,27 @@ Class Canvas
 
 		_defaultFont=sdk_mojo.m2.graphics.Font.Load( "font::DejaVuSans.ttf",16 )
 	End
-	
+
+	#rem monkeydoc hidden 
+	@author iDkP from GaragePixel 
+	@since 2025-05-25
+	#end
+	Method LinkSublibs()
+		
+		_tdraw._=Self
+		
+			_tdraw._tdebug._=_tdraw
+		
+			_tdraw._trect9._=_tdraw
+			_tdraw._trect9.__=Self
+		
+				_tdraw._trect9._tdebug._=_tdraw._trect9
+				_tdraw._trect9._tdebug.__=Self
+	End 
+
 	Method Init( rtarget:RenderTarget,device:GraphicsDevice )
 
-		_trect9._=Self ' Added by iDkP
+		LinkSublibs() ' Added by iDkP
 		Init2()
 		
 		_rtarget=rtarget
