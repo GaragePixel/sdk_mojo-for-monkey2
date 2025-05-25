@@ -535,7 +535,28 @@ Class Canvas
 		End 
 		
 		'======================================================================================== DEBUG
+
+		#rem monkeydoc Mini-Library Debug Drawing
+		@author iDkP from GaragePixel
+		@since 2025-05-25
+				
+		Helpers to program debug drawing operations in mojo.
 		
+		Note: the TDebug is a singleton created in the TDraw class
+		and addressable as a property. You call the property Debug to get 
+		access to the debug drawing functions.
+				
+		canvas.Draw.Debug.Cross( x, y, w )
+		
+		This debugging library provides specialized drawing operations for
+		visualizing geometric structures during development. Methods include
+		cross markers, Z patterns, and slash patterns for highlighting points
+		and shapes. These functions are optimized for rapid iteration and 
+		visual debugging rather than final presentation.
+		
+		Most methods support generic type parameters for coordinate systems
+		and provide overloaded versions for different geometric primitives.
+		#end		
 		Class TDebug 
 		
 			#rem monkeydoc Draw a X with lines in a square for debugging purpose
@@ -608,9 +629,11 @@ Class Canvas
 			#end
 			Method Z<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
 				
+				'TODO: Inspect that
+				
 				_._.DrawLine(	p0.x,	p0.y,	p1.x,	p1.y)
+				_._.DrawLine(	p1.x,	p1.y,	p2.x,	p2.y)
 				_._.DrawLine(	p2.x,	p2.y,	p3.x,	p3.y)
-				_._.DrawLine(	p3.x,	p3.y,	p4.x,	p4.y)
 			End
 		
 			#rem monkeydoc Draw a line \ in a quad for debugging purpose
@@ -682,7 +705,7 @@ Class Canvas
 		
 				'Draw the patches
 				For Local tile:=0 Until 8
-					_.DrawImageTiled( tiles[tile], patches[tile], modes[tile] )
+					_.DrawImageTiled( tiles[tile], patches[tile], tileModes[tile] )
 				End
 			End 
 	
@@ -714,7 +737,7 @@ Class Canvas
 		
 				'Draw the patches
 				For Local tile:=0 Until 8
-					_.ImageTiled( tiles[tile], patches[tile], modes[tile] )
+					_.ImageTiled( tiles[tile], patches[tile], tileModes[tile] )
 				End
 			End 
 	
@@ -787,9 +810,9 @@ Class Canvas
 				
 				'Draw the image of the inside view
 				If middleMode=TileMode.Fit
-					_.ImageFit( imgEdges[edge], this.Inner )
+					_.ImageFit( imgEdges[4], this.Inner )
 				Else 
-					_.ImageTiled( imgEdges[edge], this.Inner )
+					_.ImageTiled( imgEdges[4], this.Inner )
 				End
 				
 				'Draw the images of the corners
@@ -798,7 +821,7 @@ Class Canvas
 				End
 				
 				'Draw the images of the edges
-				If imgEdgeModes=TileMode.Fit
+				If edgeMode=TileMode.Fit
 					For Local edge:=0 Until 3
 						_.ImageFit( imgEdges[edge], rectEdges[edge] )
 					End 
@@ -862,7 +885,7 @@ Class Canvas
 				'Init a sequence of:
 				Local imgs:=New Image[](		cornerTopLeft,				top,						cornerTopRight,			
 												left,						middle, 					right,
-												cornerBottomRight,			bottom,						cornerBottomRight		)
+												cornerBottomLeft,			bottom,						cornerBottomRight		)
 		
 				Local modes:=New TileMode[](	patch1mode,					patch2mode,					patch3mode,	
 												patch4mode,					patch5mode,					patch6mode,
@@ -955,7 +978,28 @@ Class Canvas
 				
 				__.Color=old_color
 			End
+
+			#rem monkeydoc Mini-Library Rect9.Debug
+			@author iDkP from GaragePixel
+			@since 2025-05-25
+					
+			Specialized debugging visualization tools for Rect9 structures.
 			
+			Note: the TRect9.TDebug is a singleton created in the TRect9 class
+			and addressable as a property. You call the property Debug to get 
+			access to the debug drawing functions specific to Rect9 structures.
+			
+			canvas.Draw.Rect9.Debug.GridZ( myrect9 )
+			
+			This debugging library provides specialized drawing operations for
+			visualizing Rect9 structures during development. Methods include
+			grid patterns (H, Z, Cross) that highlight the 9 distinct regions
+			of a Rect9. These grid patterns are invaluable for debugging nine-patch
+			rendering and complex UI layouts.
+			
+			All methods support generic type parameters for coordinate systems
+			and provide consistent coloring options for visual distinction.
+			#end			
 			Class TDebug
 		
 				#rem monkeydoc Draw the outter rect with a H inside and a Z in the H zones
@@ -1109,7 +1153,7 @@ Class Canvas
 		Field _trect9:TRect9=New TRect9() 'Rect9's dedicaced draw methods
 		
 		Field _tdebug:TDebug=New TDebug() 'Special tdraw's draw functions for debugging purpose
-	End
+	End 
 
 	Private
 
