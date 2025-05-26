@@ -693,6 +693,8 @@ Class Canvas
 			@param this The Rect9 defining the layout boundaries
 			@param tiles Array of 9 images in reading order (top-left to bottom-right)
 			@param tileModes Array of 9 TileMode values corresponding to each image
+			@param blendmodes Array of 9 BlendMode values corresponding to each image
+			@param alphas Array of 9 Float values corresponding to each image
 			#end
 			Method Image<T>( this:Rect9<T>, tiles:Image[], tileModes:TileMode[] ) Where T Implements IReal Or T Implements INumeric
 			
@@ -701,8 +703,34 @@ Class Canvas
 		
 				'Draw the patches
 				For Local tile:=0 Until 8
-					_.DrawImageTiled( tiles[tile], patches[tile], tileModes[tile] )
+					If tiles[tile]<>Null _.DrawImageTiled( tiles[tile], patches[tile], tileModes[tile] )
 				End
+			End 
+
+			Method Image<T>( this:Rect9<T>, tiles:Image[], tileModes:TileMode[], blendmodes:BlendMode[], alphas:Float[] ) Where T Implements IReal Or T Implements INumeric
+			
+				'Compute the rect9's patches
+				Local patches:=this.Patches
+
+				'Store the canvas's state
+				Local blendMode_old:=__.BlendMode
+				Local alpha_old:=__.Alpha
+		
+				'Draw the patches
+				For Local tile:=0 Until 8
+					If tiles[tile]<>Null 
+						__.BlendMode=blendmodes[tile]
+						'TODO: Use Trim for alpha as guard
+						If alphas[tile]<0 alphas[tile]=0
+						If alphas[tile]>1 alphas[tile]=1
+						__.Alpha=alphas[tile]
+						_.DrawImageTiled( tiles[tile], patches[tile], tileModes[tile] )
+					End
+				End
+
+				'Restore the canvas's state
+				__.BlendMode=blendMode_old
+				__.Alpha=alpha_old
 			End 
 	
 			#rem monkeydoc Draws nine images arranged in a 9-patch pattern using direct pointers.
@@ -726,15 +754,30 @@ Class Canvas
 			@param tiles Pointer to array of 9 images in reading order (top-left to bottom-right)
 			@param tileModes Pointer to array of 9 TileMode values corresponding to each image
 			#end
-			Method Image<T>( this:Rect9<T> Ptr, tiles:Image Ptr, tileModes:TileMode Ptr ) Where T Implements IReal Or T Implements INumeric
-			
+			Method Image<T>( this:Rect9<T> Ptr, tiles:Image Ptr, tileModes:TileMode Ptr, blendmodes:BlendMode Ptr, alphas:Float Ptr ) Where T Implements IReal Or T Implements INumeric
+
 				'Compute the rect9's patches
 				Local patches:=this[0].Patches
+
+				'Store the canvas's state
+				Local blendMode_old:=__.BlendMode
+				Local alpha_old:=__.Alpha
 		
 				'Draw the patches
 				For Local tile:=0 Until 8
-					_.ImageTiled( tiles[tile], patches[tile], tileModes[tile] )
+					If tiles[tile]<>Null 
+						__.BlendMode=blendmodes[tile]
+						'TODO: Use Trim for alpha as guard
+						If alphas[tile]<0 alphas[tile]=0
+						If alphas[tile]>1 alphas[tile]=1
+						__.Alpha=alphas[tile]
+						_.ImageTiled( tiles[tile], patches[tile], tileModes[tile] )
+					End
 				End
+
+				'Restore the canvas's state
+				__.BlendMode=blendMode_old
+				__.Alpha=alpha_old
 			End 
 	
 			#rem monkeydoc Draws nine images arranged in a nine-patch pattern within a Rect9.
@@ -805,26 +848,16 @@ Class Canvas
 				Local rectEdges:=this.NotCorners
 				
 				'Draw the image of the inside view
-				If middleMode=TileMode.Fit
-					_.ImageFit( imgEdges[4], this.Inner )
-				Else 
-					_.ImageTiled( imgEdges[4], this.Inner )
-				End
+				If imgEdges[4]<>Null _.ImageTiled( imgEdges[4], this.Inner, middleMode )
 				
 				'Draw the images of the corners
 				For Local corner:=0 Until 3
-					_.ImageFit( imgCorners[corner], rectCorners[corner] )
+					If imgCorners[corner]<>Null _.ImageFit( imgCorners[corner], rectCorners[corner] )
 				End
 				
 				'Draw the images of the edges
-				If edgeMode=TileMode.Fit
-					For Local edge:=0 Until 3
-						_.ImageFit( imgEdges[edge], rectEdges[edge] )
-					End 
-				Else 
-					For Local edge:=0 Until 3
-						_.ImageTiled( imgEdges[edge], rectEdges[edge] )
-					End 
+				For Local edge:=0 Until 3
+					If imgEdges[edge]<>Null _.ImageTiled( imgEdges[edge], rectEdges[edge], edgeMode)
 				End 
 			End 
 	
@@ -863,6 +896,26 @@ Class Canvas
 			@param patch7mode TileMode for bottom-left corner
 			@param patch8mode TileMode for bottom edge
 			@param patch9mode TileMode for bottom-right corner
+
+			@param blendmode1 BlendMode for top-left corner
+			@param blendmode2 BlendMode for top edge
+			@param blendmode3 BlendMode for top-right corner
+			@param blendmode4 BlendMode for left edge
+			@param blendmode5 BlendMode for center area
+			@param blendmode6 BlendMode for right edge
+			@param blendmode7 BlendMode for bottom-left corner
+			@param blendmode8 BlendMode for bottom edge
+			@param blendmode9 BlendMode for bottom-right corner
+
+			@param alpha1 Float for top-left corner
+			@param alpha2 Float for top edge
+			@param alpha3 Float for top-right corner
+			@param alpha4 Float for left edge
+			@param alpha5 Float for center area
+			@param alpha6 Float for right edge
+			@param alpha7 Float for bottom-left corner
+			@param alpha8 Float for bottom edge
+			@param alpha9 Float for bottom-right corner
 			#end
 			Method Image<T>(	this:Rect9<T>,
 									
@@ -892,8 +945,75 @@ Class Canvas
 		
 				'Draw the patches
 				For Local tile:=0 Until 8
-					_.ImageTiled( imgs[tile], patches[tile], modes[tile] )
+					If imgs[tile]<>Null _.ImageTiled( imgs[tile], patches[tile], modes[tile] )
 				End
+			End 
+
+			Method Image<T>(	this:Rect9<T>,
+									
+								' Patches:
+												
+								cornerTopLeft:Image,		top:Image,					cornerTopRight:Image,		
+								left:Image,					middle:Image,				right:Image,
+								cornerBottomLeft:Image,		bottom:Image,				cornerBottomRight:Image,
+												
+								' Patches mode:
+		
+								patch1mode:TileMode,		patch2mode:TileMode,		patch3mode:TileMode,
+								patch4mode:TileMode,		patch5mode:TileMode,		patch6mode:TileMode,
+								patch7mode:TileMode,		patch8mode:TileMode,		patch9mode:TileMode,
+								
+								' blendmode:
+
+								blendmode1:BlendMode,		blendmode2:BlendMode,		blendmode3:BlendMode,
+								blendmode4:BlendMode,		blendmode5:BlendMode,		blendmode6:BlendMode,
+								blendmode7:BlendMode,		blendmode8:BlendMode,		blendmode9:BlendMode,
+								
+								' alpha:
+								
+								alpha1:Float=1.0,			alpha2:Float=1.0,			alpha3:Float=1.0,
+								alpha4:Float=1.0,			alpha5:Float=1.0,			alpha6:Float=1.0,
+								alpha7:Float=1.0,			alpha8:Float=1.0,			alpha9:Float=1.0	) Where T Implements IReal Or T Implements INumeric
+		
+				'Init a sequence of:
+				Local imgs:=New Image[](		cornerTopLeft,				top,						cornerTopRight,			
+												left,						middle, 					right,
+												cornerBottomLeft,			bottom,						cornerBottomRight		)
+		
+				Local modes:=New TileMode[](	patch1mode,					patch2mode,					patch3mode,	
+												patch4mode,					patch5mode,					patch6mode,
+												patch7mode,					patch8mode,					patch9mode				)
+			
+				Local bmodes:=New BlendMode[](	blendmode1,					blendmode2,					blendmode3,
+												blendmode4,					blendmode5,					blendmode6,
+												blendmode7,					blendmode8,					blendmode9				)
+
+				Local alphas:=New BlendMode[](	alpha1,						alpha2,						alpha3,
+												alpha4,						alpha5,						alpha6,
+												alpha7,						alpha8,						alpha9					)
+				
+				'Compute the rect9's patches
+				Local patches:=this.Patches
+				
+				'Store the canvas's state
+				Local blendMode_old:=__.BlendMode
+				Local alpha_old:=__.Alpha
+		
+				'Draw the patches
+				For Local tile:=0 Until 8
+					If imgs[tile]<>Null 
+						__.BlendMode=bmodes[tile]
+						'TODO: Use Trim for alpha as guard
+						If alphas[tile]<0 alphas[tile]=0
+						If alphas[tile]>1 alphas[tile]=1
+						__.Alpha=alphas[tile]
+						_.ImageTiled( imgs[tile], patches[tile], modes[tile] )
+					End
+				End
+
+				'Restore the canvas's state
+				__.BlendMode=blendMode_old
+				__.Alpha=alpha_old
 			End 
 			
 			#rem monkeydoc Draws a rect9, inner/outter rect using the same color.
