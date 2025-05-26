@@ -2352,23 +2352,6 @@ Class Canvas
 		_defaultFont=sdk_mojo.m2.graphics.Font.Load( "font::DejaVuSans.ttf",16 )
 	End
 
-	#rem monkeydoc hidden 
-	@author iDkP from GaragePixel 
-	@since 2025-05-25
-	#end
-	Method LinkSublibs()
-		
-		_tdraw._=Self
-		
-			_tdraw._tdebug._=_tdraw
-		
-			_tdraw._trect9._=_tdraw
-			_tdraw._trect9.__=Self
-		
-				_tdraw._trect9._tdebug._=_tdraw._trect9
-				_tdraw._trect9._tdebug.__=Self
-	End 
-
 	Method Init( rtarget:RenderTarget,device:GraphicsDevice )
 
 		LinkSublibs() ' Added by iDkP
@@ -2417,6 +2400,23 @@ Class Canvas
 		_outlineWidth=0
 		
 		_matrix=New AffineMat3f
+	End
+
+	#rem monkeydoc hidden 
+	@author iDkP from GaragePixel 
+	@since 2025-05-25
+	#end
+	Method LinkSublibs()
+		
+		_tdraw._=Self
+		
+			_tdraw._tdebug._=_tdraw
+		
+			_tdraw._trect9._=_tdraw
+			_tdraw._trect9.__=Self
+		
+				_tdraw._trect9._tdebug._=_tdraw._trect9
+				_tdraw._trect9._tdebug.__=Self
 	End
 
 	'Vertices
