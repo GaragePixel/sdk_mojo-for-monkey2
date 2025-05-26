@@ -493,7 +493,7 @@ Class Canvas
 		@param this The rectangle that will contain the tiled pattern
 		@param mode Controls tiling arrangement (combination of horizontal and vertical modes)
 		#end
-		Method ImageTiled<T>( imgTile:Image, this:Rect<T>, mode:TileMode=TileMode.Tiled )
+		Method ImageTiled<T>( imgTile:Image, this:Rect<T>, mode:TileMode=TileMode.Tiled ) Where T Implements IReal Or T Implements INumeric
 			
 			' iDkP note 2025-05-23:
 			'
@@ -527,14 +527,12 @@ Class Canvas
 		@param fit the rect used to get the image in position
 		#end 
 		Method ImageFit<T>( 	image:Image, 
-								fit:Rect<T> )
+								fit:Rect<T> ) Where T Implements IReal Or T Implements INumeric
 									
 			Local sH:Float=fit.Height/image.Height
 			Local sW:Float=fit.Width/image.Width
 			_.DrawImage(image,fit.X,fit.Y,0,sW,sH)
 		End 
-		
-		'======================================================================================== DEBUG
 
 		#rem monkeydoc Mini-Library Debug Drawing
 		@author iDkP from GaragePixel
@@ -570,7 +568,7 @@ Class Canvas
 			@param y the position y of the square
 			@param w the size w of the square
 			#end 
-			Method Cross( x:Float, y:Float, w:Float ) 'iDkP added: Doc
+			Method Cross<T>( x:T, y:T, w:T ) Where T Implements IReal Or T Implements INumeric 'iDkP added: Doc and generic type
 		
 				Local x0 := x-w
 				Local y0 := y-w
@@ -594,7 +592,7 @@ Class Canvas
 			@param u the absolute position u of the square
 			@param v the absolute position v of the square
 			#end 
-			Method Cross<T>( x:T, y:T, u:T, v:T )
+			Method Cross<T>( x:T, y:T, u:T, v:T ) Where T Implements IReal Or T Implements INumeric
 				
 				Local x0 := x
 				Local y0 := y
@@ -613,7 +611,7 @@ Class Canvas
 			@param p2 the four vertices of a quad
 			@param p3 the four vertices of a quad
 			#end 
-			Method Cross<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+			Method Cross<T>( p0:Vec2<T>, p1:Vec2<T>, p2:Vec2<T>, p3:Vec2<T>) Where T Implements IReal Or T Implements INumeric
 				
 				_._.DrawLine(	p0.x,	p0.y,	p2.x,	p2.y)
 				_._.DrawLine(	p1.x,	p1.y,	p3.x,	p3.y)
@@ -627,7 +625,7 @@ Class Canvas
 			@param p2 the four vertices of a quad
 			@param p3 the four vertices of a quad
 			#end
-			Method Z<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+			Method Z<T>( p0:Vec2<T>, p1:Vec2<T>, p2:Vec2<T>, p3:Vec2<T>) Where T Implements IReal Or T Implements INumeric
 				
 				'TODO: Inspect that
 				
@@ -644,7 +642,7 @@ Class Canvas
 			@param p2 the four vertices of a quad
 			@param p3 the four vertices of a quad
 			#end
-			Method Slash<T>( p0:Vec2i<T>, p1:Vec2i<T>, p2:Vec2i<T>, p3:Vec2i<T>)
+			Method Slash<T>( p0:Vec2<T>, p1:Vec2<T>, p2:Vec2<T>, p3:Vec2<T>) Where T Implements IReal Or T Implements INumeric
 		
 				_._.DrawLine(	p2.x,	p2.y,	p3.x,	p3.y)
 			End
@@ -654,8 +652,6 @@ Class Canvas
 			Field _:TDraw 'parent of TDebug
 			
 		End
-		
-		'================================================================================= Rect9
 
 		#rem monkeydoc Mini-Library Rect9 (draw a rect9 struct)
 		@author iDkP from GaragePixel
@@ -698,7 +694,7 @@ Class Canvas
 			@param tiles Array of 9 images in reading order (top-left to bottom-right)
 			@param tileModes Array of 9 TileMode values corresponding to each image
 			#end
-			Method Image<T>( this:Rect9<T>, tiles:Image[], tileModes:TileMode[] )
+			Method Image<T>( this:Rect9<T>, tiles:Image[], tileModes:TileMode[] ) Where T Implements IReal Or T Implements INumeric
 			
 				'Compute the rect9's patches
 				Local patches:=this.Patches
@@ -730,7 +726,7 @@ Class Canvas
 			@param tiles Pointer to array of 9 images in reading order (top-left to bottom-right)
 			@param tileModes Pointer to array of 9 TileMode values corresponding to each image
 			#end
-			Method Image<T>( this:Rect9<T> Ptr, tiles:Image Ptr, tileModes:TileMode Ptr )
+			Method Image<T>( this:Rect9<T> Ptr, tiles:Image Ptr, tileModes:TileMode Ptr ) Where T Implements IReal Or T Implements INumeric
 			
 				'Compute the rect9's patches
 				Local patches:=this[0].Patches
@@ -798,7 +794,7 @@ Class Canvas
 												
 								' Middle mode:
 	
-								middleMode:TileMode=TileMode.Fit	)
+								middleMode:TileMode=TileMode.Fit	) Where T Implements IReal Or T Implements INumeric
 				
 				'Init a sequence of:
 				Local imgCorners:=New Image[](		cornerTopLeft,		cornerTopRight,			cornerBottomRight,		cornerBottomLeft)
@@ -880,7 +876,7 @@ Class Canvas
 		
 								patch1mode:TileMode,		patch2mode:TileMode,		patch3mode:TileMode,
 								patch4mode:TileMode,		patch5mode:TileMode,		patch6mode:TileMode,
-								patch7mode:TileMode,		patch8mode:TileMode,		patch9mode:TileMode		)
+								patch7mode:TileMode,		patch8mode:TileMode,		patch9mode:TileMode		) Where T Implements IReal Or T Implements INumeric
 		
 				'Init a sequence of:
 				Local imgs:=New Image[](		cornerTopLeft,				top,						cornerTopRight,			
@@ -905,7 +901,7 @@ Class Canvas
 			The vertex coordinates are also transform by the current Matrix. 	
 			@param The rect9 to draw
 			#end	
-			Method Wireframe<T>( this:Rect9<T> )
+			Method Wireframe<T>( this:Rect9<T> ) Where T Implements IReal Or T Implements INumeric
 				
 				Wire(__,this._rect0)
 				Wire(__,this._rect1)
@@ -919,7 +915,7 @@ Class Canvas
 			@param Outter frame color
 			@param Inner frame color
 			#end
-			Method Wireframe<T>( this:Rect9<T>, colorOutterRect:Color, colorInnerRect:Color )
+			Method Wireframe<T>( this:Rect9<T>, colorOutterRect:Color, colorInnerRect:Color ) Where T Implements IReal Or T Implements INumeric
 				
 				Local oldColor:=__.Color
 				__.Color=colorOutterRect
@@ -936,7 +932,7 @@ Class Canvas
 			@param The rect9 to draw
 			@param Outter frame color
 			#end	
-			Method OutterFrame<T>( this:Rect9<T>, colorOutterRect:Color )
+			Method OutterFrame<T>( this:Rect9<T>, colorOutterRect:Color ) Where T Implements IReal Or T Implements INumeric
 				
 				Local oldColor:=__.Color
 				__.Color=colorOutterRect
@@ -951,7 +947,7 @@ Class Canvas
 			@param The rect9 to draw
 			@param Inner frame color
 			#end		
-			Method InnerFrame<T>( this:Rect9<T>, colorInnerRect:Color=__.Color )
+			Method InnerFrame<T>( this:Rect9<T>, colorInnerRect:Color=__.Color ) Where T Implements IReal Or T Implements INumeric
 				
 				Local oldColor:=__.Color
 				__.Color=colorInnerRect
@@ -966,7 +962,7 @@ Class Canvas
 			@param optional color for the exterior frame
 			@param optional color for the H lines
 			#end 
-			Method GridH<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )				
+			Method GridH<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) ) Where T Implements IReal Or T Implements INumeric				
 				
 				Local old_color:=__.Color
 				
@@ -1009,7 +1005,7 @@ Class Canvas
 				@param optional color for the exterior frame
 				@param optional color for the Z lines
 				#end 
-				Method GridZ<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )
+				Method GridZ<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) ) Where T Implements IReal Or T Implements INumeric
 					
 					Local old_color:=_c.Color
 					
@@ -1030,7 +1026,7 @@ Class Canvas
 				@param optional color for the exterior frame
 				@param optional color for the X lines
 				#end
-				Method GridCross<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) )					
+				Method GridCross<T>( this:Rect9<T>, externColor:Color=New Color(1,1,0), gridColor:Color=New Color(1,0,0) ) Where T Implements IReal Or T Implements INumeric				
 					
 					Local old_color:=__.Color
 					
@@ -1039,7 +1035,7 @@ Class Canvas
 					
 					__.Color=gridColor
 					H(this)
-					Self.Cross(this) 'Self is used by caution
+					Self.X(this) 'Self is used by caution
 					
 					__.Color=old_color
 				End
@@ -1049,7 +1045,7 @@ Class Canvas
 				method draws the lines projected from the inner rect to the outter rect.
 				@param The Rect9 to draw
 				#end
-				Method H<T>( this:Rect9<T>)
+				Method H<T>( this:Rect9<T>) Where T Implements IReal Or T Implements INumeric
 					
 					'V Lines
 					__.DrawLine(	this.InnerLeft,		this.Top,			this.InnerLeft,		this.Bottom)
@@ -1063,7 +1059,7 @@ Class Canvas
 				#rem monkeydoc Draw only the Z
 				@param The Rect9 to draw
 				#end
-				Method Z<T>( this:Rect9<T> )
+				Method Z<T>( this:Rect9<T> ) Where T Implements IReal Or T Implements INumeric
 					Local verts:=this.Vertices
 					Zinternal(this, verts)
 				End
@@ -1071,7 +1067,7 @@ Class Canvas
 				#rem monkeydoc Draw only the cross (X shape)
 				@param The Rect9 to draw
 				#end
-				Method Cross<T>( this:Rect9<T> ) 'iDkP: CANNOT CALL IT 'DRAWX' BECAUSE INTERNAL BUG!
+				Method X<T>( this:Rect9<T> )  Where T Implements IReal Or T Implements INumeric'Method Cross<T>( this:Rect9<T> ) 'iDkP: CANNOT CALL IT 'DRAWX' BECAUSE INTERNAL BUG!
 					
 					Local verts:Vec2<T>[]=this.Vertices
 					
@@ -1097,7 +1093,7 @@ Class Canvas
 			
 				#rem monkeydoc @hidden
 				#end
-				Method Zinternal<T>( this:Rect9<T>, verts:Vec2<T>[] )
+				Method Zinternal<T>( this:Rect9<T>, verts:Vec2<T>[] ) Where T Implements IReal Or T Implements INumeric
 					
 					'Z Boxes 1,2,3
 					__.DrawLine(	verts[01].x,	verts[01].y,	verts[04].x,	verts[04].y)
@@ -1126,7 +1122,7 @@ Class Canvas
 	
 			#rem monkeydoc @hidden
 			#end
-			Function Wire<T>( canvas:Canvas, rect:Rect<T> )
+			Function Wire<T>( canvas:Canvas, rect:Rect<T> ) Where T Implements IReal Or T Implements INumeric
 				Local x0:=rect.min.x
 				Local y0:=rect.min.y
 				Local x1:=rect.max.x
