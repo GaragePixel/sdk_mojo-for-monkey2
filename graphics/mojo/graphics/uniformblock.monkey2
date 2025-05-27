@@ -6,21 +6,18 @@ Namespace sdk_mojo.m2.graphics
 @author iDkP from GaragePixel (documentation)
 @since 2021-01-13
 
-UserUniform is a core mechanism for passing per-draw-call data from your Mojo code to your shaders. 
-Using them correctly is key to unlocking advanced rendering effects and dynamic visuals in Wonkey.
-
+UserUniform is a core mechanism for passing per-draw-call data from your sdk_mojo code to your shaders. 
+Using them correctly is key to unlocking advanced rendering effects and dynamic visuals in Mx2/W/Aida.
 Uniforms are values uploaded to the GPU which remain constant for all vertices/fragments during a single draw call. 
 UserUniforms are uniforms defined by the developer in the shader code, as opposed to built-in or system uniforms.
-
 UserUniform refers to a user-defined shader uniform variable within the graphics pipeline, 
-especially in the context of the Wonkey engine's Mojo graphics module.
-
+especially in the context of the Aida engine's sdk_mojo graphics module.
 UserUniforms allow you to pass custom values (float, float2, float3, float4, mat4, arrays etc.) 
-from your Wonkey/Mojo code to your GPU shaders.
-In Mojo, you set these values before issuing draw calls, ensuring that the shader receives the latest data.
-Uniform blocks (or UniformBufferObjects) may group multiple user uniforms for efficiency and organization.
+from your Aida/sdk_mojo code to your GPU shaders.
 
-The Mojo graphics backend (and dependencies like sokol_gfx, raylib, OpenGL) provide API support 
+In sdk_mojo, you set these values before issuing draw calls, ensuring that the shader receives the latest data.
+Uniform blocks (or UniformBufferObjects) may group multiple user uniforms for efficiency and organization.
+The sdk_mojo graphics backend (and dependencies like sokol_gfx, raylib, OpenGL) provide API support 
 for setting user uniforms. Uniforms are referenced and set by name or location, depending on backend.
 - The code in sokol_gfx_imgui.h iterates uniform blocks, queries types/names, 
 and allows inspection of custom/user uniforms for debugging.
@@ -29,7 +26,7 @@ UserUniforms enable dynamic, per-draw customization of shader parameters without
 They provide a clean separation between shader logic (GPU) and application logic (CPU).
 Uniform blocks improve performance by batching multiple uniforms into a single upload.
 Debugging tools allow inspection of current UserUniform values, making graphics debugging and iteration faster.
-Mojo’s abstraction ensures you use familiar Wonkey/Monkey2 syntax, 
+sdk_mojo’s abstraction ensures you use familiar Mx2/W/Aida syntax, 
 but your code remains portable across graphics APIs (OpenGL, Direct3D, etc).
 #End
 Class UserUniform
