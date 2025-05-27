@@ -1,6 +1,8 @@
 
 Namespace sdk_mojo.m2.graphics
 
+Global UserUniforms:Stack<UserUniform> = New Stack<UserUniform> 'jl added
+
 #rem monkeydoc UserUniform
 @author jean_luc - jl (seyhajin)
 @author iDkP from GaragePixel (documentation)
@@ -42,6 +44,10 @@ Class UserUniform
 	End
 End
 
+#rem monkeydoc AddUserUniform
+@author jean_luc - jl (seyhajin)
+@since 2021-01-13
+#end
 Function AddUserUniform:UserUniform(names:String[], index:Int, callback:Void(useruniform:UserUniform, uniforms:UniformBlock) )
 	Local uni:=New UserUniform(names, index, callback)
 	UserUniforms.Add(uni)
