@@ -545,12 +545,22 @@ Class Image Extends Resource
 ' allowing for efficient zero-copy pipeline integration between the rendering
 ' system and the pixmap drawing API. This enables seamless transfer from
 ' GPU-accelerated images to CPU-manipulable pixel data.
-	
-    Method FromImage:Pixmap(
-		rect:Recti=Null,
-		dstx:Int=0,
-		dsty:Int=0,
-		convertPixelFormat:Bool=False)
+
+    #rem monkeydoc Converting any Image to Pixmap
+    (Get a new pixmap from an Image)
+    @author iDkP from GaragePixel
+    @since 2025-01-16
+	This implementation handles the complex task of transferring pixel data
+	from a VRAM to RAM through an intermediate Canvas operation.
+	@param rect [[Rect]] the cliping rect
+	@param dstx [[Int]] the destination of the 1st left pixel
+	@param dsty [[Int]] the destination of the 1st top pixel
+	@param convertPixelFormat [[Bool]] Adopt or no the image's pixelformat
+    #end
+    Method FromImage:Pixmap(	rect:Recti=Null,
+								dstx:Int=0,
+								dsty:Int=0,
+								convertPixelFormat:Bool=False	)
 
 		' This is the Instance method for converting self to Pixmap
 
@@ -577,24 +587,28 @@ Class Image Extends Resource
 
         Return p
     End
-    
-    Function FromImage:Pixmap(  
-	    image:Image,
-		rect:Recti=Null,
-		dstx:Int=0,
-		dsty:Int=0,
-		convertPixelFormat:Bool=False)
 
-		' iDkP from GaragePixel
-		' 2025-01-16
-		'
-		' Static function for converting any Image to Pixmap
-		'
+    #rem monkeydoc Static function for converting any Image to Pixmap
+    (Get a new pixmap from an Image)
+    @author iDkP from GaragePixel
+    @since 2025-01-16
+	This implementation handles the complex task of transferring pixel data
+	from a VRAM to RAM through an intermediate Canvas operation.
+	@param image [[Image]] the image source
+	@param rect [[Rect]] the cliping rect
+	@param dstx [[Int]] the destination of the 1st left pixel
+	@param dsty [[Int]] the destination of the 1st top pixel
+	@param convertPixelFormat [[Bool]] Adopt or no the image's pixelformat
+    #end
+    Function FromImage:Pixmap(  image:Image,
+								rect:Recti=Null,
+								dstx:Int=0,
+								dsty:Int=0,
+								convertPixelFormat:Bool=False	)
+
 		' Proposed and discuted in the Discord server by iDkP: 
 		' https://discord.com/channels/796336780302876683/870267572812128298/1329307346895110205
 		'
-		' This implementation handles the complex task of transferring pixel data
-		' from a GPU texture to CPU memory through an intermediate Canvas operation.
 		' The process creates a temporary Image and Canvas, renders the source
 		' ImageWrapper to it, then copies the pixel data into a new Pixmap.
 
