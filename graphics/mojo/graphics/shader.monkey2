@@ -13,6 +13,9 @@ Const A_NORMAL:=4
 Const A_TANGENT:=5
 Const A_WEIGHTS:=6
 Const A_BONES:=7
+Const A_COLOR2:=8 'jl added
+Const A_XYZPOSITION:=9 'jl added
+Const A_COLOR3:=10 'jl added
 
 Private
 
@@ -305,6 +308,40 @@ Class Shader
 		
 		Return GetShader( name,defs )
 	End
+
+	#rem monkeydoc Loads a shader with a given name.
+	@author jp
+	@author iDkP from Garagepixel (documentation 2025-05-27)
+	@since 2021-01-13
+	#end	
+	Function Load:Shader( name:String, defs:String="" )
+'		Return GetShader( name, defs )
+		local nm:string = StripExt( StripDir(name) )
+'		Print "nm:"+nm 
+		Local tag := nm+";"+defs
+		
+		If _cache.Contains( tag ) Return _cache[tag]
+		
+		local source:String = LoadString( name )
+		If not source Then
+			Print "Shader: Can't load "+name
+			return Null
+		End if
+			
+'		Print name
+'		Print source
+		
+'		Local shader:=source ? New Shader( name,source,defs ) Else Null
+		local shader:Shader = New Shader( nm, source, defs )
+		If not shader Then
+			Print "Shader: Can't create"
+			return Null
+		End if
+		
+		_cache[tag]=shader
+		
+		Return shader
+	End
 	
 	Private
 	
@@ -444,6 +481,9 @@ Class Shader
 			glBindAttribLocation( glprogram,A_TANGENT,"a_Tangent" )
 			glBindAttribLocation( glprogram,A_WEIGHTS,"a_Weights" )
 			glBindAttribLocation( glprogram,A_BONES,"a_Bones" )
+			glBindAttribLocation( glprogram,A_COLOR2,"a_Color2" ) 'jl added
+			glBindAttribLocation( glprogram,A_COLOR3,"a_Color3" ) 'jl added
+			glBindAttribLocation( glprogram,A_XYZPOSITION,"a_XYZPosition" ) 'jl added
 			
 			glLink( glprogram )
 			
@@ -454,5 +494,4 @@ Class Shader
 		
 		glCheck()
 	End
-
 End
