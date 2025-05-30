@@ -288,6 +288,28 @@ Class Image Extends Resource
 		Return _texCoords
 	End
 
+	#rem wonkeydoc Image filepath.
+	@author jean-luc
+	#end
+	Property FilePath:string()
+		Return _filePath
+	Setter( filePath:string )
+		_filePath = filePath
+	End
+
+
+	#rem wonkeydoc The image's pixmap - usually used for internal stuff.
+	@author jean-luc
+	A superb example is to use this as a way of saving an image
+	In code do the following:
+	@example:
+	<image>.GetPixmap().Save( path )
+	#end	
+	method GetPixmap:Pixmap()
+		If Not _managed Then Return Null
+		Return _managed
+	End method
+
 	#rem monkeydoc @hidden Sets an image texture.
 	#end	
 '	Method SetTexture( index:Int,texture:Texture )
@@ -341,6 +363,24 @@ Class Image Extends Resource
 		Local pixmap:=Pixmap.Load( path,Null,True )
 		If Not pixmap Return Null
 
+		If Not shader shader=sdk_mojo.m2.graphics.Shader.GetShader( "sprite" )
+		
+		Local image:=New Image( pixmap,textureFlags,shader )
+		
+		image.FilePath = path 'jl added
+		
+		Return image
+	End
+
+	#rem monkeydoc Loads an image from Databuffer.
+	@author DrCox85
+	#end
+	Function Load:Image( data:DataBuffer,shader:Shader=Null,textureFlags:TextureFlags=TextureFlags.FilterMipmap )
+		
+		Local path:="memory::("+ULong( data.Data )+","+data.Length+")"
+		Local pixmap:=Pixmap.Load( path,Null,True )
+		If Not pixmap Return Null
+	
 		If Not shader shader=sdk_mojo.m2.graphics.Shader.GetShader( "sprite" )
 		
 		Local image:=New Image( pixmap,textureFlags,shader )
@@ -448,6 +488,8 @@ Class Image Extends Resource
 	
 	Private
 	
+	Field _filePath:string 'jl added
+	
 	Field _shader:Shader
 	Field _uniforms:UniformBlock
 	Field _textures:=New Texture[4]
@@ -501,6 +543,8 @@ Class Image Extends Resource
 		SetTexture( 0,texture )
 		Color=Color.White
 		LightDepth=100
+		
+		_filePath = texture.FilePath 'jl added
 
 		UpdateTexCoords()
 		UpdateVertices()
@@ -521,6 +565,8 @@ Class Image Extends Resource
 		_rect=rect+image._rect.Origin
 		_handle=image._handle
 		_scale=image._scale
+		
+		_filePath = image.FilePath 'jl added
 		
 		UpdateTexCoords()
 		UpdateVertices()
@@ -587,7 +633,7 @@ Class Image Extends Resource
 
         Return p
     End
-
+    
     #rem monkeydoc Static function for converting any Image to Pixmap
     (Get a new pixmap from an Image)
     @author iDkP from GaragePixel
@@ -599,7 +645,7 @@ Class Image Extends Resource
 	@param dstx [[Int]] the destination of the 1st left pixel
 	@param dsty [[Int]] the destination of the 1st top pixel
 	@param convertPixelFormat [[Bool]] Adopt or no the image's pixelformat
-    #end
+    #end 
     Function FromImage:Pixmap(  image:Image,
 								rect:Recti=Null,
 								dstx:Int=0,
@@ -611,8 +657,6 @@ Class Image Extends Resource
 		'
 		' The process creates a temporary Image and Canvas, renders the source
 		' ImageWrapper to it, then copies the pixel data into a new Pixmap.
-
-        'Get a new pixmap from an Image
         
         Local w:Int=image.Width
         Local h:Int=image.Height
@@ -645,16 +689,24 @@ Class ResourceManager Extension
 		Local slug:="Image:name="+StripDir( StripExt( path ) )+"&shader="+(shader ? shader.Name Else "null")
 		
 		Local image:=Cast<Image>( OpenResource( slug ) )
-		If image Return image
+
+		'If image Return image 'undone by jl
+
+		'jl changed:
+		If image
+			image.FilePath = path
+			Return image
+		End
 		
 		Local texture:=OpenTexture( path,Null )
 		If Not texture Return Null
 		
 		image=New Image( texture,shader )
+		
+		image.FilePath = path 'jl added
 
 		AddResource( slug,image )
 
 		Return image
 	End
-
 End
