@@ -8,12 +8,14 @@ Namespace sdk_mojo.m2
 Using stdlib.system.io
 Using stdlib.plugins.sdl2..
 
-#Import "../../../stdlib/platforms/emscripten/emscripten"		'iDkP: why we need this for each platforms?
-Using stdlib.platforms.emscripten..
+'TODO FIXME Conditional compilation for emscripten
+'#Import "../../../stdlib/platforms/emscripten/emscripten"		'iDkP: why we need this for each platforms?
+'Using stdlib.platforms.emscripten..
 
 Using sdk.api.opengl..
 Using sdk.api.openal..
-Using sdk_mojo.m2.app
+'Using sdk_mojo.m2.app..
+Using sdk_mojo.m2..
 
 #Import "app/app"
 #Import "app/event"
@@ -37,6 +39,8 @@ Using sdk_mojo.m2.app
 #Import "graphics/vertex3f"
 #Import "graphics/texture"
 #Import "graphics/shader"
+
+#Import "graphics/imageslice" 'jl added
 
 '2d graphics stuff
 #Import "graphics/canvas"
