@@ -117,7 +117,9 @@ Class GameController
 
 	#rem monkeydoc Loads game controller mappings from a file.
 	
-	Returns the number of mappings added.
+	@Returns the number of mappings added.
+
+	@Example GameController.AddMappingsFromFile( "asset::gamecontrollerdb.txt" )
 
 	#end
 	Function AddMappingsFromFile:Int( path:String )
