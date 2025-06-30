@@ -638,7 +638,7 @@ Private
 	Field _lastCopy:Entity
 	Field _rvisible:Bool
 	Field _visible:Bool
-	Field _color:Color=stdlib.graphics.Color.White
+	Field _color:Color=stdlib.types.Color.White
 	Field _alpha:Float=1
 	
 	Field _t:Vec3f=New Vec3f
