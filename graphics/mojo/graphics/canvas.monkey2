@@ -1415,7 +1415,7 @@ Class Canvas
 				_._._pmcolor = pmcolor
 			End
 
-			Method Color( x:Float,y:Float,w:Float,h:Float, color1:Color=stdlib.graphics.Color.Black, color2:Color=stdlib.graphics.Color.White )
+			Method Color( x:Float,y:Float,w:Float,h:Float, color1:Color=stdlib.types.Color.Black, color2:Color=stdlib.types.Color.White )
 				
 				Local color_old:Color = _._._color
 		
