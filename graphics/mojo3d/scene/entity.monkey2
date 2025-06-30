@@ -189,7 +189,7 @@ Class Entity Abstract
 	#rem monkeydoc Master color.
 	#end
 	[jsonify=1]
-	Property Color:Color()
+	Property Color:stdlib.types.Color()
 		
 		Return _color
 		
