@@ -402,7 +402,7 @@ Class Image Extends Resource
 		
 		Local texture0:=graphics.Texture.Load( diffuse,textureFlags )
 		
-		If Not texture0 texture0=graphics.Texture.ColorTexture( stdlib.graphics.Color.White )
+		If Not texture0 texture0=graphics.Texture.ColorTexture( stdlib.types.Color.White )
 		
 		If Not shader shader=graphics.Shader.GetShader( "bump" )
 		
